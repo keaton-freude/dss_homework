@@ -41,3 +41,9 @@ find_package(OpenGL REQUIRED)
 
 target_include_directories(DSSHomework PUBLIC ${OPENGL_INCLUDE_DIR})
 target_link_libraries(DSSHomework ${OPENGL_gl_LIBRARY})
+
+## GLM
+add_library(GlmLib INTERFACE)
+target_include_directories(GlmLib INTERFACE thirdparty/glm)
+
+target_link_libraries(DSSHomework GlmLib)

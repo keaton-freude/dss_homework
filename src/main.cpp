@@ -3,11 +3,14 @@
 #include "json.hpp"
 #include <GLFW/glfw3.h>
 #include "gl/GL.h"
+#include "glm/vec3.hpp"
 
 using json = nlohmann::json;
 
 int main() {
     GLFWwindow *window;
+
+    glm::vec3 test(0.0f, 0.0f, 0.0f);
 
     if (!glfwInit()) {
         return -1;
