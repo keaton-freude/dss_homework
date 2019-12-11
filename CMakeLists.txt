@@ -20,3 +20,9 @@ add_library(CppHttpLib INTERFACE)
 target_include_directories(CppHttpLib INTERFACE thirdparty/cpp-httplib)
 
 target_link_libraries(DSSHomework CppHttpLib)
+
+## JSON
+add_library(JsonLib INTERFACE)
+target_include_directories(JsonLib INTERFACE thirdparty/json)
+
+target_link_libraries(DSSHomework JsonLib)
