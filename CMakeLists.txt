@@ -26,3 +26,18 @@ add_library(JsonLib INTERFACE)
 target_include_directories(JsonLib INTERFACE thirdparty/json)
 
 target_link_libraries(DSSHomework JsonLib)
+
+## GLFW
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(thirdparty/glfw-3.3)
+
+target_link_libraries(DSSHomework glfw)
+
+## OpenGL
+find_package(OpenGL REQUIRED)
+
+target_include_directories(DSSHomework PUBLIC ${OPENGL_INCLUDE_DIR})
+target_link_libraries(DSSHomework ${OPENGL_gl_LIBRARY})
