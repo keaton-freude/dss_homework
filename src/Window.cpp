@@ -34,3 +34,14 @@ Window::~Window() {
 GLFWwindow *Window::GetWindow() {
     return _window;
 }
+
+bool Window::Running() const {
+    // Below will return true after someone has told _us_ to close the window
+    // or when the user presses something like the 'X' exit button in their windowing
+    // system
+    return !glfwWindowShouldClose(_window);
+}
+
+void Window::Close() const {
+    glfwSetWindowShouldClose(_window, 1);
+}

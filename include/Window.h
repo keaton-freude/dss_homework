@@ -35,6 +35,12 @@ public:
 
     // TODO: Questionable?
     GLFWwindow *GetWindow();
+
+    // Is the window currently in a Running state? I.e. its not preparing to, or already, exit
+    bool Running() const;
+
+    // Tell the underlying window that it should close
+    void Close() const;
 };
 
 }
