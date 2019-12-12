@@ -8,10 +8,19 @@ project(DSSHomework VERSION 1.0
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(DSSHomework
+    src/IndexBuffer.cpp
     src/Input.cpp
     src/Application.cpp
     src/Window.cpp
     src/main.cpp)
+
+# Not totally necessary, but I like having the console window when I'm not running
+# from a shell. If we run from a shell, we get output sent to that shell
+if (MSVC)
+    set_target_properties(DSSHomework PROPERTIES
+    LINK_FLAGS /SUBSYSTEM:CONSOLE
+    )
+endif()
 
 # Our headers
 target_include_directories(DSSHomework PUBLIC include)
