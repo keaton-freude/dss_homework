@@ -60,3 +60,8 @@ add_library(GlmLib INTERFACE)
 target_include_directories(GlmLib INTERFACE thirdparty/glm)
 
 target_link_libraries(DSSHomework GlmLib)
+
+## GLEW
+add_subdirectory(thirdparty/glew-2.1.0/build/cmake)
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/glew-2.1.0/include)
+target_link_libraries(DSSHomework glew)
