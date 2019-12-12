@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 
@@ -40,6 +41,10 @@ bool Window::Running() const {
     // or when the user presses something like the 'X' exit button in their windowing
     // system
     return !glfwWindowShouldClose(_window);
+}
+
+void Window::SwapBuffers() const {
+    glfwSwapBuffers(_window);
 }
 
 void Window::Close() const {

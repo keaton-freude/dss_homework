@@ -37,27 +37,11 @@ public:
 private:
     // Hash table of the current state of keys. The value is set to 'True' if we consider
     // the button "pressed" which is a button which has been pressed & released
-    std::unordered_map<Keys, bool> _input_state = {
-        {Keys::Escape, false},
-        {Keys::L, false},
-        {Keys::H, false},
-        {Keys::Left, false},
-        {Keys::Right, false},
-        {Keys::A, false},
-        {Keys::D, false}
-    };
+    std::unordered_map<Keys, bool> _input_state; 
 
     // A mapping between our defined Keys, to GLFW scan codes
     // Allows us to bridge GLFW state with our own internal state
-    const std::unordered_map<Keys, int> _KEY_SCAN_CODE_MAPPING = {
-        {Keys::Escape, GLFW_KEY_ESCAPE},
-        {Keys::L, GLFW_KEY_L},
-        {Keys::H, GLFW_KEY_H},
-        {Keys::Left, GLFW_KEY_LEFT},
-        {Keys::Right, GLFW_KEY_RIGHT},
-        {Keys::A, GLFW_KEY_A},
-        {Keys::D, GLFW_KEY_D}
-    };
+    const static std::unordered_map<Keys, int> _KEY_SCAN_CODE_MAPPING;
 
     std::shared_ptr<Window> _window;
 

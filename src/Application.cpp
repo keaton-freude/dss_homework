@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <GL/glew.h>
+
 using namespace dss;
 
 // Currently a very opinionated default. Should expand the sort of
@@ -26,8 +28,7 @@ void Application::Run() {
         // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwSwapBuffers(_window->GetWindow());
-
+        _window->SwapBuffers();
         // Draw the TitleRenderer
     }
 }

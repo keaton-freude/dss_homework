@@ -2,7 +2,12 @@
 
 #include <memory>
 #include <string>
-#include <GLFW/glfw3.h>
+
+// Forward declare is here, so we don't have the #include for GLFW in a public header
+// Because GLFW ultimately includes gl.h, which breaks GLEW which needs to be included
+// before gl.h is ever included. Thus, the "easy" way is to not include GLFW in headers
+// otherwise you get annoying transitive includes causing the build to fail
+struct GLFWwindow;
 
 namespace dss
 {
@@ -38,6 +43,8 @@ public:
 
     // Is the window currently in a Running state? I.e. its not preparing to, or already, exit
     bool Running() const;
+
+    void SwapBuffers() const;
 
     // Tell the underlying window that it should close
     void Close() const;
