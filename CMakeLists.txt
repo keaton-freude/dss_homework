@@ -69,6 +69,9 @@ add_subdirectory(thirdparty/glew-2.1.0/build/cmake)
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/glew-2.1.0/include)
 target_link_libraries(DSSHomework glew)
 
+## STB Image
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/stb)
+
 ### Misc Stuff
 # Copy our resources folder into the build directory where our executable lives
 add_custom_command(TARGET DSSHomework POST_BUILD
