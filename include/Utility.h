@@ -36,7 +36,6 @@ static inline std::string GetResourcesRoot() {
     // NOTE: In a more robust application we'd have multiple ways of trying to find our installed
     // resources. Maybe environment variable.. registry setting, etc
     // In this case we will just look in the same directory as the currently running executable
-    std::cout << "Current path: " << std::filesystem::current_path().string() << std::endl;
     const static std::string RESOURCES_ROOT = (std::filesystem::current_path() / "resources").string();
     const static bool resourceRootValid = std::filesystem::exists(RESOURCES_ROOT);
     if (!resourceRootValid) {

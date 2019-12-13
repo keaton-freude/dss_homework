@@ -69,3 +69,7 @@ void PrintShaderLinkErrorOutput(int programHandle) {
     std::cerr << "FAILED TO LINK SHADER. INFO: " << std::endl;
     std::cerr << buffer << std::endl;
 }
+
+void ShaderProgram::Bind() {
+    glUseProgram(_programHandle);
+}

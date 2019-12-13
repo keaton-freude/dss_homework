@@ -2,6 +2,10 @@
 
 #include "Window.h"
 #include "Input.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "ShaderProgram.h"
+#include "glm/mat4x4.hpp"
 
 #include <memory>
 
@@ -30,6 +34,12 @@ private:
     // The Window this application uses for Input & Rendering
     std::shared_ptr<Window> _window;
     std::unique_ptr<Input> _input;
+
+    // TESTING, NOT LONG TERM
+    VertexBuffer *vb;
+    IndexBuffer *ib;
+    ShaderProgram *shader;
+    glm::mat4 mvp;
 
 public:
     Application();

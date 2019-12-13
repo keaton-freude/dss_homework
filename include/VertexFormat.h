@@ -27,6 +27,9 @@ struct PositionColor {
     static void SetVertexAttribPointers() {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (int)PositionColor::SizeInBytes(), 0);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, (int)PositionColor::SizeInBytes(), (void*)12);
     }
 
     PositionColor() = default;

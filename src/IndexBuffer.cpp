@@ -4,7 +4,7 @@
 
 using namespace dss;
 
-IndexBuffer::IndexBuffer(IMesh *mesh) {
+IndexBuffer::IndexBuffer(IMesh *mesh) : _numFaces(mesh->GetNumFaces()) {
     glGenBuffers(1, &_indexBufferHandle);
 
     // Hard-coding static usage of the buffer. An obvious extension point to this

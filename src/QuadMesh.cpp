@@ -14,11 +14,11 @@ using namespace dss;
  *  Quad will be a unit quad: width == 1.0f, height == 1.0f, top-left corner at 0.0f, 0.0f
  */
 QuadMesh::QuadMesh()
-    : _indices({0, 1, 2, 0, 1, 3}), _vertices({
-        {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)},
-        {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)},
-        {glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)},
-        {glm::vec3(1.0f, 0.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)}
+    : _indices({0, 2, 1, 1, 2, 3}), _vertices({
+        {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)},
+        {glm::vec3(1.0f, 1.0f, 0.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)},
+        {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)},
+        {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)}
     }), _numFaces(2)
 {
 }
