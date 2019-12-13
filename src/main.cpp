@@ -7,6 +7,7 @@
 #include "ShaderProgram.h"
 #include "Utility.h"
 #include <gl/glew.h>
+#include "Texture.h"
 
 using json = nlohmann::json;
 using namespace dss;

@@ -18,8 +18,11 @@ Application::Application() : _window(std::make_shared<Window>(1280, 720, "DSS Ho
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("Failed to Initialize GLEW!");
     }
-    shader = new ShaderProgram(FileReadAllText(GetPathToResource("shaders/basic.vert")), 
-        FileReadAllText(GetPathToResource("shaders/basic.frag")));
+
+    texture = new Texture("textures/background.jpg");
+
+    shader = new ShaderProgram(FileReadAllText(GetPathToResource("shaders/textured.vert")), 
+        FileReadAllText(GetPathToResource("shaders/textured.frag")));
     QuadMesh mesh;
     ib = new IndexBuffer(&mesh);
     vb = new VertexBuffer(&mesh); 
@@ -27,7 +30,7 @@ Application::Application() : _window(std::make_shared<Window>(1280, 720, "DSS Ho
     auto ortho = glm::ortho(0.f, 1280.f, 0.f, 720.f, -100.f, 100.f);
     //auto ortho = glm::mat4(1.0f);
     auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-    auto model = glm::scale(glm::mat4(1.0f), glm::vec3(250.0f));
+    auto model = glm::scale(glm::mat4(1.0f), glm::vec3(1280.f, 720.0f, 1.0f));
 
     mvp = ortho * view * model;
 }
@@ -51,13 +54,14 @@ void Application::Run() {
         // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
 
-        PositionColor::SetVertexAttribPointers();
+        PositionUV::SetVertexAttribPointers();
         // TEST RENDERING
         ib->Bind();
         vb->Bind();
         shader->Bind();
         shader->SetShaderUniform("MVP", mvp);
-         
+        texture->Bind();
+
         // Draw..
         glDrawElements(GL_TRIANGLES, ib->GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
 

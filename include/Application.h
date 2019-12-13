@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "ShaderProgram.h"
+#include "Texture.h"
 #include "glm/mat4x4.hpp"
 
 #include <memory>
@@ -39,6 +40,7 @@ private:
     VertexBuffer *vb;
     IndexBuffer *ib;
     ShaderProgram *shader;
+    Texture *texture;
     glm::mat4 mvp;
 
 public:

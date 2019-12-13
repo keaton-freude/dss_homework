@@ -15,7 +15,7 @@ namespace dss
 class QuadMesh : public IMesh {
 private:
     std::vector<uint32_t> _indices;
-    std::vector<PositionColor> _vertices;
+    std::vector<PositionUV> _vertices;
     size_t _numFaces;
 public:
     QuadMesh();

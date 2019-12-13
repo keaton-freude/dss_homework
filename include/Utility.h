@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include <iostream>
+#include <vector>
 
 /**
  *  Small helper utilities 
@@ -30,6 +31,18 @@ static inline std::string FileReadAllText(std::filesystem::path path) {
         throw std::runtime_error("Failed to open file.");
     }
 }
+
+/*static inline std::vector<std::byte> FileReadAllBytes(std::filesystem::path path) {
+    if (!std::filesystem::exists(path)) {
+        std::cerr << "File not found: " << std::filesystem::absolute(path).string() << std::endl;
+        throw std::runtime_error("File not found");
+    }
+
+    try {
+        std::ifstream fs(path, std::ios_base::binary);
+        return std::vector<std::byte>(std::istreambuf_iterator<std::byte>(fs), std::istream_iterator<std::byte>());
+    }
+}*/
 
 static inline std::string GetResourcesRoot() {
     // Returns the path to the resources folder by making some guesses
