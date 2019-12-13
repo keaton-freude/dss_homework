@@ -3,6 +3,7 @@
 #include <string_view>
 #include <fstream>
 #include <filesystem>
+#include <iostream>
 
 /**
  *  Small helper utilities 
@@ -11,7 +12,7 @@
 namespace dss
 {
 
-std::string FileReadAllText(std::filesystem::path path) {
+static inline std::string FileReadAllText(std::filesystem::path path) {
     // Ensure file exists so we can give a nice error if we can't find it
     if (!std::filesystem::exists(path)) {
         std::cerr << "File not found: " << std::filesystem::absolute(path).string() << std::endl;
@@ -30,7 +31,7 @@ std::string FileReadAllText(std::filesystem::path path) {
     }
 }
 
-std::string GetResourcesRoot() {
+static inline std::string GetResourcesRoot() {
     // Returns the path to the resources folder by making some guesses
     // NOTE: In a more robust application we'd have multiple ways of trying to find our installed
     // resources. Maybe environment variable.. registry setting, etc
@@ -49,7 +50,7 @@ std::string GetResourcesRoot() {
  *  A resource is a file, available in the 'resources' folder and is namespaced
  *  Example resourceName: "shaders/basic.vert" or "textures/background.png" 
  */
-std::filesystem::path GetPathToResource(const std::string& resourceName) {
+static inline std::filesystem::path GetPathToResource(const std::string& resourceName) {
     return std::filesystem::path(GetResourcesRoot()) / std::filesystem::path(resourceName);
 }
 
