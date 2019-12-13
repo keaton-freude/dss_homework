@@ -24,14 +24,14 @@ void Input::PollForEvents() {
     glfwPollEvents();
     // Walk the key -> GLFW scan code mapping, querying the state of each
     // and updating our internal state
-    for(const auto& [key, scan_code] : _KEY_SCAN_CODE_MAPPING) {
+    for(const auto& [key, scan_code] : Input::_KEY_SCAN_CODE_MAPPING) {
         auto state = glfwGetKey(_window->GetWindow(), scan_code);
-        Input::_input_state[key] = (state == GLFW_PRESS);
+        _input_state[key] = (state == GLFW_PRESS);
     }
 }
 
 // If the hash table doesn't include the key asked for, it will be inserted
 // here via the operator[], and its value automatically set to false (default value for bool)
 bool Input::KeyPressed(Keys key) {
-    return Input::_input_state[key];
+    return _input_state[key];
 }

@@ -1,16 +1,25 @@
 #include <iostream>
 #include "httplib.h"
 #include "json.hpp"
-#include <GLFW/glfw3.h>
-#include "gl/GL.h"
 #include "glm/vec3.hpp"
-#include "Window.h"
+#include "VertexFormat.h"
 #include "Application.h"
+#include "ShaderProgram.h"
+#include "Utility.h"
+#include <gl/glew.h>
 
 using json = nlohmann::json;
 using namespace dss;
 
 int main() {
-    Application application;
-    application.Run();
+    try {
+        glewInit();
+        auto path = GetPathToResource("shaders/basic.vert");
+        std::cout << path.string() << std::endl;
+        //ShaderProgram program(FileReadAllText("../../resources/shaders/basic.vert"), FileReadAllText("../../resources/shaders/basic.frag")); 
+        Application application;
+        application.Run();
+    } catch (std::exception& exception) {
+        std::cerr << "Caught unhandled exception in main: " << exception.what() << std::endl;
+    }
 }

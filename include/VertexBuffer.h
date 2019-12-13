@@ -2,6 +2,8 @@
 
 #include "IMesh.h"
 
+#include <stdint.h>
+
 namespace dss
 {
 
