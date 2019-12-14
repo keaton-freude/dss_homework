@@ -26,6 +26,24 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
         std::abort();
     }
 
+    // GLFW lets us store a pointer to any object, associated with the window
+    // which aids us when setting up member-function callbacks
+    glfwSetWindowUserPointer(_window, (void*)this);
+
+    glfwSetWindowSizeCallback(_window, [](GLFWwindow *window, int width, int height){
+        void *userPointer = glfwGetWindowUserPointer(window);
+
+        // Hmm, dynamic_cast wont work on a void*.. any nice way to ensure
+        // below works..?
+        Window *ourWindow = static_cast<Window *>(userPointer);
+
+        ourWindow->_width = width;
+        ourWindow->_height = height;
+        for(const auto& callback : ourWindow->_resizeCallbacks) {
+            callback(WindowResizeEvent((int)width, (int)height));
+        }
+    });
+
     glfwMakeContextCurrent(_window);
 
     if (glewInit() != GLEW_OK) {
@@ -36,6 +54,10 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
 
 Window::~Window() {
     glfwTerminate();
+}
+
+// Alert all observers of the new size so they can adjust themselves
+void Window::WindowSizeCallback(GLFWwindow* window, int width, int height) {
 }
 
 GLFWwindow *Window::GetWindow() {
@@ -67,4 +89,8 @@ uint32_t Window::Height() const {
     int width, height;
     glfwGetWindowSize(_window, &width, &height);
     return static_cast<uint32_t>(height);
+}
+
+void Window::RegisterResizeEventCallback(std::function<void(WindowResizeEvent)> callback) {
+    _resizeCallbacks.push_back(callback);
 }

@@ -2,6 +2,10 @@
 
 #include <memory>
 #include <string>
+#include <list>
+#include <functional>
+
+#include "WindowResizeEvent.h"
 
 // Forward declare is here, so we don't have the #include for GLFW in a public header
 // Because GLFW ultimately includes gl.h, which breaks GLEW which needs to be included
@@ -29,6 +33,12 @@ private:
     uint16_t _width;
     uint16_t _height;
     std::string _name;
+
+    // List of observers of resize events
+    std::list<std::function<void(WindowResizeEvent)>> _resizeCallbacks;
+
+    // Called when the GLFW window is resized
+    void WindowSizeCallback(GLFWwindow* window, int width, int height);
 public:
     // Require user to specify arguments through other constructors
     Window() = delete;
@@ -51,6 +61,8 @@ public:
 
     uint32_t Width() const;
     uint32_t Height() const;
+
+    void RegisterResizeEventCallback(std::function<void(WindowResizeEvent)> callback);
 };
 
 }
