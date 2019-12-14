@@ -28,12 +28,13 @@ Application::Application()
     auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 
     _viewProjection = ortho * view;
-    _contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec3(100.0f, 100.0f, 0.0f), 16 * 40, 9 * 40);
+    _contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec2(0.22f, 0.22f), _window->Width(), _window->Height());
 
     // Resize the background if the window changes
     _window->RegisterResizeEventCallback([this](WindowResizeEvent event) {
         this->_background.SetSize(event.newWidth, event.newHeight);
         this->CalculateViewProjection();
+        this->_contentTile->Resize(event.newWidth, event.newHeight);
 
         // Hmm this doesn't _exactly_ belong here.. Don't want opengl concepts flooding app code..
         glViewport(0, 0, (int)event.newWidth, (int)event.newHeight);
