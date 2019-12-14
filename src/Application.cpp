@@ -13,26 +13,21 @@ using namespace dss;
 
 // Currently a very opinionated default. Should expand the sort of
 // configuration which can be passed to the Application
-Application::Application() : _window(std::make_shared<Window>(1280, 720, "DSS Homework")), _input(std::make_unique<Input>(_window)) {
+Application::Application() 
+    :   _window(std::make_shared<Window>(1920, 1080, "DSS Homework")), 
+        _input(std::make_unique<Input>(_window)),
+        _texturedShader(std::make_shared<ShaderProgram>(FileReadAllText(GetPathToResource("shaders/textured.vert")),
+            FileReadAllText(GetPathToResource("shaders/textured.frag")))),
+        _background(_window, _texturedShader) {
     // Now that the Window is created, our OpenGL context is created and set, safe to initialize glew
     if (glewInit() != GLEW_OK) {
         throw std::runtime_error("Failed to Initialize GLEW!");
     }
 
-    texture = new Texture("textures/background.jpg");
-
-    shader = new ShaderProgram(FileReadAllText(GetPathToResource("shaders/textured.vert")), 
-        FileReadAllText(GetPathToResource("shaders/textured.frag")));
-    QuadMesh mesh;
-    ib = new IndexBuffer(&mesh);
-    vb = new VertexBuffer(&mesh); 
-
-    auto ortho = glm::ortho(0.f, 1280.f, 0.f, 720.f, -100.f, 100.f);
-    //auto ortho = glm::mat4(1.0f);
+    auto ortho = glm::ortho(0.f, 1920.f, 0.f, 1080.f, -100.f, 100.f);
     auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-    auto model = glm::scale(glm::mat4(1.0f), glm::vec3(1280.f, 720.0f, 1.0f));
 
-    mvp = ortho * view * model;
+    _viewProjection = ortho * view;
 }
 
 void Application::Run() {
@@ -54,17 +49,7 @@ void Application::Run() {
         // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
 
-        PositionUV::SetVertexAttribPointers();
-        // TEST RENDERING
-        ib->Bind();
-        vb->Bind();
-        shader->Bind();
-        shader->SetShaderUniform("MVP", mvp);
-        texture->Bind();
-
-        // Draw..
-        glDrawElements(GL_TRIANGLES, ib->GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
-
+        _background.Draw(_viewProjection);
         _window->SwapBuffers();
         // Draw the TitleRenderer
     }

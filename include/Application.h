@@ -7,6 +7,7 @@
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "glm/mat4x4.hpp"
+#include "Background.h"
 
 #include <memory>
 
@@ -35,13 +36,11 @@ private:
     // The Window this application uses for Input & Rendering
     std::shared_ptr<Window> _window;
     std::unique_ptr<Input> _input;
-
+    std::shared_ptr<ShaderProgram> _texturedShader;
+    Background _background;
     // TESTING, NOT LONG TERM
-    VertexBuffer *vb;
-    IndexBuffer *ib;
-    ShaderProgram *shader;
-    Texture *texture;
-    glm::mat4 mvp;
+    glm::mat4 _viewProjection;
+
 
 public:
     Application();

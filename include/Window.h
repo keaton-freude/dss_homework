@@ -48,6 +48,9 @@ public:
 
     // Tell the underlying window that it should close
     void Close() const;
+
+    uint32_t Width() const;
+    uint32_t Height() const;
 };
 
 }
