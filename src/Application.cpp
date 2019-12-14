@@ -40,6 +40,14 @@ Application::Application()
         // Hmm this doesn't _exactly_ belong here.. Don't want opengl concepts flooding app code..
         glViewport(0, 0, (int)event.newWidth, (int)event.newHeight);
     });
+
+    glm::vec2 startPosition = glm::vec2(25.f, 500.f);
+    uint32_t spaceBetween = (_window->Width() * .2) + 25;
+    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), startPosition));
+    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 1), startPosition.y)));
+    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 2), startPosition.y)));
+    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 3), startPosition.y)));
+    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 4), startPosition.y)));
 }
 
 void Application::CalculateViewProjection() {

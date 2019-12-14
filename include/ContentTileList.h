@@ -8,6 +8,8 @@
 #include "glm/vec2.hpp"
 #include "glm/mat4x4.hpp"
 
+#include <mutex>
+
 namespace dss
 {
 
@@ -26,6 +28,7 @@ namespace dss
 class ContentTileList {
 private:
     std::vector<std::unique_ptr<ContentTile>> _contentTiles;
+    std::mutex _contentTilesMutex;
     std::shared_ptr<ShaderProgram> _shader;
 
     uint32_t _screenWidth;
@@ -39,6 +42,10 @@ public:
     void Draw(glm::mat4 viewProjection);
 
     void Resize(uint32_t width, uint32_t height);
+
+    // This method will add a tile, to the contentTiles list
+    // This method is thread-safe
+    void AddContentTile(std::unique_ptr<ContentTile> &&tile);
 };
 
 }
