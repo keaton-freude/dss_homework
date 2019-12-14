@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <gl/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -26,6 +27,11 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
     }
 
     glfwMakeContextCurrent(_window);
+
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "Failed to initialize GLEW! Giving up..." << std::endl;
+        std::abort();
+    }
 }
 
 Window::~Window() {
@@ -49,4 +55,16 @@ void Window::SwapBuffers() const {
 
 void Window::Close() const {
     glfwSetWindowShouldClose(_window, 1);
+}
+
+uint32_t Window::Width() const {
+    int width, height;
+    glfwGetWindowSize(_window, &width, &height);
+    return static_cast<uint32_t>(width);
+}
+
+uint32_t Window::Height() const {
+    int width, height;
+    glfwGetWindowSize(_window, &width, &height);
+    return static_cast<uint32_t>(height);
 }
