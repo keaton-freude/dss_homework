@@ -21,8 +21,14 @@ void Background::Draw(glm::mat4 viewProjection) {
     _texture.Bind();
     PositionUV::SetVertexAttribPointers();
     _shader->Bind();
+    auto w = _window->Width();
+    auto h = _window->Height();
     auto model = _transform.GetModelMatrix();
     _shader->SetShaderUniform("MVP", viewProjection * _transform.GetModelMatrix());
 
     glDrawElements(GL_TRIANGLES, _indexBuffer.GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
+}
+
+void Background::SetSize(uint32_t width, uint32_t height) {
+    _transform.scale = glm::vec3(static_cast<float>(width), static_cast<float>(height), 1.0f);
 }

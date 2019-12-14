@@ -43,6 +43,8 @@ private:
     std::unique_ptr<ContentTile> _contentTile;
     glm::mat4 _viewProjection;
 
+    void CalculateViewProjection();
+
 
 public:
     Application();

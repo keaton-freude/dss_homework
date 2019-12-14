@@ -37,6 +37,8 @@ public:
 
     // TODO: Is this how we want to pass the "VP" matrices?
     void Draw(glm::mat4 viewProjection);
+
+    void SetSize(uint32_t width, uint32_t height);
 };
 
 }
