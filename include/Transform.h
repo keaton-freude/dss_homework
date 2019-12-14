@@ -1,0 +1,37 @@
+#pragma once
+
+#include "glm/glm.hpp"
+#include <glm/gtx/transform.hpp>
+
+namespace dss
+{
+
+/**
+ *  A transform is a combination of a translation, rotation and scale
+ * 
+ *  It represeents some orientation in 3D space and used to represent the "Model"
+ *  matrix in the MVP matrix 
+ * 
+ *  NOTE: Typically a rotation should be stored as a Quaternion, but not forseeing a 
+ *  reason to add the additional complexity as rotations will not be involved in this app.
+ */
+struct Transform {
+    glm::vec3 translation;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+
+    // NOTE: It seems that GLM doesn't default-initialize vec3 to sane values...
+    Transform() {
+        translation = glm::vec3(0.0f, 0.0f, 0.0f);
+        rotation = glm::vec3(1.0f, 1.0f, 1.0f);
+        scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    }
+
+    inline glm::mat4 GetModelMatrix() const {
+        // Translate -> Rotate -> Scale (happens in reverse order)
+        // NOTE: Below tends to be very expensive, see if thats the case and optimize TODO
+        return glm::translate(translation) * glm::rotate(0.0f, rotation) * glm::scale(scale);
+    }
+};
+
+}
