@@ -9,6 +9,7 @@
 #include "glm/mat4x4.hpp"
 #include "Background.h"
 #include "ContentTile.h"
+#include "ContentTileList.h"
 
 #include <memory>
 
@@ -39,8 +40,8 @@ private:
     std::unique_ptr<Input> _input;
     std::shared_ptr<ShaderProgram> _texturedShader;
     Background _background;
+    std::unique_ptr<ContentTileList> _contentList;
     // TESTING, NOT LONG TERM
-    std::unique_ptr<ContentTile> _contentTile;
     glm::mat4 _viewProjection;
 
     void CalculateViewProjection();

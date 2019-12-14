@@ -21,12 +21,12 @@ ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, 
     CalculateSize();
 }
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight, glm::vec3 position)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight, glm::vec2 position)
 :   _shader(shader),
     _indexBuffer(&QuadMesh()),
     _vertexBuffer(&QuadMesh()),
     _texture("textures/example_content.jpg"),
-    _transform(position, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(static_cast<float>((float)screenWidth * size.x), static_cast<float>((float)screenHeight * size.y), 1.0f)),
+    _transform(glm::vec3(position.x, position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(static_cast<float>((float)screenWidth * size.x), static_cast<float>((float)screenHeight * size.y), 1.0f)),
     _size(size),
     _screenWidth(screenWidth),
     _screenHeight(screenHeight)

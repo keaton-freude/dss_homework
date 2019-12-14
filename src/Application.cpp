@@ -28,13 +28,14 @@ Application::Application()
     auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 
     _viewProjection = ortho * view;
-    _contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec2(0.22f, 0.22f), _window->Width(), _window->Height());
+    //_contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec2(0.22f, 0.22f), _window->Width(), _window->Height(), glm::vec3(25.0f, 500.0f, 0.0f));
+    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(25.f, 500.f), _window->Width(), _window->Height());
 
     // Resize the background if the window changes
     _window->RegisterResizeEventCallback([this](WindowResizeEvent event) {
         this->_background.SetSize(event.newWidth, event.newHeight);
         this->CalculateViewProjection();
-        this->_contentTile->Resize(event.newWidth, event.newHeight);
+        this->_contentList->Resize(event.newWidth, event.newHeight);
 
         // Hmm this doesn't _exactly_ belong here.. Don't want opengl concepts flooding app code..
         glViewport(0, 0, (int)event.newWidth, (int)event.newHeight);
@@ -68,7 +69,7 @@ void Application::Run() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         _background.Draw(_viewProjection);
-        _contentTile->Draw(_viewProjection);
+        _contentList->Draw(_viewProjection);
         _window->SwapBuffers();
         // Draw the TitleRenderer
     }

@@ -47,7 +47,7 @@ public:
     ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight);
 
     // Create a ContentTile at a given location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight, glm::vec3 position);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight, glm::vec2 position);
 
     void Draw(glm::mat4 viewProjection);
 

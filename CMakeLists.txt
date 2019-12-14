@@ -8,6 +8,7 @@ project(DSSHomework VERSION 1.0
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(DSSHomework
+    src/ContentTileList.cpp
     src/ContentTile.cpp
     src/Texture.cpp
     src/ShaderProgram.cpp
