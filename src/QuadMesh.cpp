@@ -11,7 +11,7 @@ using namespace dss;
  * 
  *  Faces are defined as: [{v0, v2, v1}, {v1, v2, v3}]
  * 
- *  Quad will be a unit quad: width == 1.0f, height == 1.0f, top-left corner at 0.0f, 0.0f
+ *  Quad will be a unit quad: width == 1.0f, height == 1.0f
  */
 QuadMesh::QuadMesh()
     : _indices({0, 2, 1, 1, 2, 3}), _vertices({
