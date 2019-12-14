@@ -28,6 +28,8 @@ Application::Application()
     auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 
     _viewProjection = ortho * view;
+
+    _contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec3(100.0f, 100.0f, 0.0f), 16 * 40, 9 * 40);
 }
 
 void Application::Run() {
@@ -50,6 +52,7 @@ void Application::Run() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         _background.Draw(_viewProjection);
+        _contentTile->Draw(_viewProjection);
         _window->SwapBuffers();
         // Draw the TitleRenderer
     }
