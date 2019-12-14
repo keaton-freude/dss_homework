@@ -27,6 +27,11 @@ struct Transform {
         scale = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
+    Transform(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale) 
+        : translation(translation), rotation(rotation), scale(scale) {
+
+    }
+
     inline glm::mat4 GetModelMatrix() const {
         // Translate -> Rotate -> Scale (happens in reverse order)
         // NOTE: Below tends to be very expensive, see if thats the case and optimize TODO
