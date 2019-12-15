@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "GlfwUserPointer.h"
 
 #include <GLFW/glfw3.h>
 
@@ -18,20 +19,43 @@ const std::unordered_map<Input::Keys, int> Input::_KEY_SCAN_CODE_MAPPING = {
 };
 
 Input::Input(std::shared_ptr<Window> window) : _window(window) {
+    // Register ourself within the GLFW user pointer
+    void *userPointer = glfwGetWindowUserPointer(_window->GetWindow());
+
+    // Any safe way to cast this?
+    GlfwUserPointer *glfwUserPointer = static_cast<GlfwUserPointer *>(userPointer);
+    glfwUserPointer->input = this;
+    glfwSetKeyCallback(_window->GetWindow(), Input::KeyCallback);
+}
+
+void Input::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    void *userPointer = glfwGetWindowUserPointer(window);
+
+    // Any safe way to cast this?
+    GlfwUserPointer *glfwUserPointer = static_cast<GlfwUserPointer *>(userPointer);
+    glfwUserPointer->input->HandleKeyCallback(key, scancode, action, mods);
+}
+
+void Input::HandleKeyCallback(int key, int scancode, int action, int mods) {
+    for(const auto &[k, s] : Input::_KEY_SCAN_CODE_MAPPING) {
+        if (s == key) {
+            _input_state[k] = (action == GLFW_PRESS);
+            return;
+        }
+    }
 }
 
 void Input::PollForEvents() {
     glfwPollEvents();
-    // Walk the key -> GLFW scan code mapping, querying the state of each
-    // and updating our internal state
-    for(const auto& [key, scan_code] : Input::_KEY_SCAN_CODE_MAPPING) {
-        auto state = glfwGetKey(_window->GetWindow(), scan_code);
-        _input_state[key] = (state == GLFW_PRESS);
-    }
 }
 
 // If the hash table doesn't include the key asked for, it will be inserted
 // here via the operator[], and its value automatically set to false (default value for bool)
-bool Input::KeyPressed(Keys key) {
+bool Input::KeyPressed(Keys key, bool resetKeyIfPressed) {
+    if (_input_state[key] && resetKeyIfPressed) {
+        _input_state[key] = false;
+        return true;
+    }
+
     return _input_state[key];
 }

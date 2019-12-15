@@ -45,6 +45,8 @@ private:
 
     std::shared_ptr<Window> _window;
 
+    static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+    void HandleKeyCallback(int key, int scancode, int action, int mods);
 
 public:
     // Don't want to allow construction of an Input class without being given a GLFW window
@@ -57,7 +59,10 @@ public:
     void PollForEvents();
 
     // User API for determining if a Key has been pressed during a frame
-    bool KeyPressed(Keys key);
+    // @resetKeyIfPressed: Whether we should immediately set the state of the key to
+    // false if it was detected to be pressed. Avoids duplicate events
+    // NOTE: Definitely hacky, but seems like too much work to design this in correctly
+    bool KeyPressed(Keys key, bool resetKeyIfPressed = false);
 };
 
 }
