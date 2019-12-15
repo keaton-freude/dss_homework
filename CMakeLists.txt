@@ -8,6 +8,13 @@ project(DSSHomework VERSION 1.0
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(DSSHomework
+    thirdparty/imgui/examples/imgui_impl_opengl3.cpp
+    thirdparty/imgui/examples/imgui_impl_glfw.cpp
+    thirdparty/imgui/imgui_draw.cpp
+    thirdparty/imgui/imgui_widgets.cpp
+    thirdparty/imgui/imgui.cpp
+    src/TextManager.cpp
+    src/Text.cpp
     src/ContentTileList.cpp
     src/ContentTile.cpp
     src/Texture.cpp
@@ -88,6 +95,10 @@ target_link_libraries(DSSHomework OpenSSL::SSL OpenSSL::Crypto)
 
 ## GLText
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/gltext)
+
+## ImGUI
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/imgui)
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/imgui/examples)
 
 ### Misc Stuff
 # Copy our resources folder into the build directory where our executable lives
