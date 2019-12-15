@@ -56,6 +56,12 @@ public:
         _screenHeight = height;
         CalculateSize();
     }
+
+    Transform GetTransform() const;
+
+    void SetPosition(glm::vec3 position);
+
+    void SetScale(glm::vec3 scale);
 };
 
 }

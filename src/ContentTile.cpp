@@ -51,3 +51,15 @@ void ContentTile::Draw(glm::mat4 viewProjection) {
 
     glDrawElements(GL_TRIANGLES, _indexBuffer.GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
 }
+
+Transform ContentTile::GetTransform() const {
+    return _transform;
+}
+
+void ContentTile::SetPosition(glm::vec3 position) {
+    _transform.translation = position;
+}
+
+void ContentTile::SetScale(glm::vec3 scale) {
+    _transform.scale = scale;
+}

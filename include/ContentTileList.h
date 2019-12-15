@@ -30,9 +30,23 @@ private:
     std::vector<std::unique_ptr<ContentTile>> _contentTiles;
     std::mutex _contentTilesMutex;
     std::shared_ptr<ShaderProgram> _shader;
+    Transform _transform;
 
     uint32_t _screenWidth;
     uint32_t _screenHeight;
+
+    const float _SPACE_BETWEEN_TILES = 0.02f;
+
+    float UnitToScreenSpaceWidth(float unitAmount) {
+        return _screenWidth * unitAmount;
+    }
+
+    float ScreenSpaceToUnitWidth(float screenAmount) {
+        return screenAmount / _screenWidth;
+    }
+
+    // Take into account the current tiles, and whether one is selected and update their transforms
+    void ResizeElements();
 public:
     // TODO: Probably delete
     ContentTileList();
