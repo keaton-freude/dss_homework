@@ -34,6 +34,9 @@ private:
     Texture _texture;
     Transform _transform;
 
+    // Whether this tile is selected and should show extra info & expand itself 
+    bool _expanded;
+
 public:
     // Create a ContentTile at a default location
     ContentTile(std::shared_ptr<ShaderProgram> shader);
@@ -51,6 +54,8 @@ public:
     void SetScale(glm::vec3 scale);
 
     void Resize(uint32_t width, uint32_t height);
+
+    void SetExpand(bool value);
 };
 
 }

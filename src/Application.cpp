@@ -138,6 +138,14 @@ void Application::Run() {
             _window->Close();
         }
 
+        if (_input->KeyPressed(Input::Keys::Left, true)) {
+            _contentList->SelectPreviousTile();
+        }
+
+        if (_input->KeyPressed(Input::Keys::Right, true)) {
+            _contentList->SelectNextTile();
+        }
+
         // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
 

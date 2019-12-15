@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "GlfwUserPointer.h"
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -26,9 +27,11 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
         std::abort();
     }
 
-    // GLFW lets us store a pointer to any object, associated with the window
-    // which aids us when setting up member-function callbacks
-    glfwSetWindowUserPointer(_window, (void*)this);
+    // GLFW lets us store a pointer to any object, 'GlfwUserPointer' will wrap up
+    // the required pointers
+    auto glfwUserPointer = new GlfwUserPointer();
+    glfwUserPointer->window = this;
+    glfwSetWindowUserPointer(_window, glfwUserPointer);
 
     glfwSetWindowSizeCallback(_window, [](GLFWwindow *window, int width, int height){
         void *userPointer = glfwGetWindowUserPointer(window);

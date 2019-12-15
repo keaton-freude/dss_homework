@@ -45,11 +45,49 @@ void ContentTileList::Resize(uint32_t width, uint32_t height) {
 }
 
 void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
-    tile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
+    // If this is the first tile, make sure its selected
+    if (_contentTiles.size() == 0) {
+        tile->SetExpand(true);
+        tile->Resize(UnitToScreenSpaceWidth(0.2f * EXPAND_SCALE_FACTOR), UnitToScreenSpaceHeight(0.2f * EXPAND_SCALE_FACTOR));
+    } else {
+        tile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
+    }
 
     // When this goes out of scope, the contentTilesMutex is released
     std::lock_guard<std::mutex> guard(_contentTilesMutex);
     _contentTiles.emplace_back(std::move(tile));
 
     ResizeElements();
+}
+
+void ContentTileList::ExpandTile(size_t last, size_t current) {
+    auto &lastTile = _contentTiles[last];
+    auto &currentTile = _contentTiles[current];
+
+    lastTile->SetExpand(false);
+    lastTile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
+    currentTile->SetExpand(true);
+    currentTile->Resize(UnitToScreenSpaceWidth(0.2f * EXPAND_SCALE_FACTOR), UnitToScreenSpaceHeight(0.2f * EXPAND_SCALE_FACTOR));
+
+    ResizeElements();
+}
+
+void ContentTileList::SelectNextTile() {
+    // Check that we don't go out of bounds
+    if (_contentTiles.size() == 0 || _selectedTileIndex >= _contentTiles.size() - 1) {
+        return;
+    }
+
+    ExpandTile(_selectedTileIndex, _selectedTileIndex + 1);
+    _selectedTileIndex++;
+}
+
+void ContentTileList::SelectPreviousTile() {
+    // Check that we don't go out of bounds
+    if (_contentTiles.size() == 0 || _selectedTileIndex == 0) {
+        return;
+    }
+
+    ExpandTile(_selectedTileIndex, _selectedTileIndex - 1);
+    _selectedTileIndex--;
 }

@@ -55,3 +55,8 @@ void ContentTile::Resize(uint32_t width, uint32_t height) {
     _transform.scale.x = static_cast<float>(width);
     _transform.scale.y = static_cast<float>(height);
 }
+
+void ContentTile::SetExpand(bool value) {
+    std::cout << "Expand state? " << value << "\n";
+    _expanded = value;
+}

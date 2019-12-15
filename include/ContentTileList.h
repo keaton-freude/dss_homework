@@ -35,6 +35,12 @@ private:
     uint32_t _screenWidth;
     uint32_t _screenHeight;
 
+    // Which tile in our vector is selected
+    size_t _selectedTileIndex = 0;
+
+    // 25% larger for expanded tiles
+    const float EXPAND_SCALE_FACTOR = 1.25f;
+
     const float _SPACE_BETWEEN_TILES = 0.02f;
 
     float UnitToScreenSpaceWidth(float unitAmount) {
@@ -55,6 +61,8 @@ private:
 
     // Take into account the current tiles, and whether one is selected and update their transforms
     void ResizeElements();
+    // last is the previously expanded tile, current is the tile to be expanded
+    void ExpandTile(size_t last, size_t current);
 public:
     // TODO: Probably delete
     ContentTileList();
@@ -68,6 +76,10 @@ public:
     // This method will add a tile, to the contentTiles list
     // This method is thread-safe
     void AddContentTile(std::unique_ptr<ContentTile> &&tile);
+
+    void SelectNextTile();
+
+    void SelectPreviousTile();
 };
 
 }
