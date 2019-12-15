@@ -4,11 +4,11 @@
 
 using namespace dss;
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, const std::string &title)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title)
 :   _shader(shader),
     _indexBuffer(&QuadMesh()),
     _vertexBuffer(&QuadMesh()),
-    _texture("textures/example_content.jpg"),
+    _texture(std::move(textureData)),
     _transform(),
     _title(title),
     _titleText(title, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f))
@@ -18,11 +18,11 @@ ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, const std::strin
     _vertexBuffer = VertexBuffer(&mesh);
 }
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, const std::string &title, glm::vec2 position)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, glm::vec2 position)
 :   _shader(shader),
     _indexBuffer(&QuadMesh()),
     _vertexBuffer(&QuadMesh()),
-    _texture("textures/example_content.jpg"),
+    _texture(std::move(textureData)),
     _transform(glm::vec3(position.x, position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)),
     _title(title),
     _titleText(title, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f))
@@ -42,7 +42,9 @@ void ContentTile::Draw(glm::mat4 view, glm::mat4 projection) {
 
     glDrawElements(GL_TRIANGLES, _indexBuffer.GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
 
-    _titleText.Draw();
+    if (_expanded) {
+        _titleText.Draw();
+    }
 }
 
 Transform ContentTile::GetTransform() const {

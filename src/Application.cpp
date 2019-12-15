@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "QuadMesh.h"
 #include "MLBGameContent.h"
+#include "Url.h"
 
 #include <GL/glew.h>
 #include <stdexcept>
@@ -69,14 +70,20 @@ Application::Application()
 
             {
                 for(int i = 0; i < data.totalGames; ++i) {
-                    // Download a picture, for now just assume a 16:9 ratio.. probably use just 1440x720 as it'll look fine
+                    // Download a picture, for now just assume a 16:9 ratio.. probably use just 1280x720 as it'll look fine
                     // because it'll be pretty downscaled
-                    httplib::SSLClient imageClient("securea.mlb.com");
+
+                    // Take the image source and break it out into the host and endpoint
+                    auto url = Url(data.dates[0].games[i].content.editorial.recap.home.photo.cuts["1280x720"].src);
+
+                    httplib::SSLClient imageClient(url.Host().c_str());
                     
                     httplib::Headers headers = {
                         { "Content-Type", "application/octet-stream"}
                     };
-                    auto imageResponse = imageClient.Get("/assets/images/7/9/6/280664796/cuts/1920x1080/cut.jpg", headers);
+
+
+                    auto imageResponse = imageClient.Get(url.Path().c_str(), headers);
                     
                     if (imageResponse && imageResponse->status == 200) {
                         std::cout << "Got an image!" << std::endl;
@@ -109,11 +116,12 @@ void Application::ProcessContentQueue() {
     }
 
     while (!_contentQueue.empty()) {
-        const auto& item = _contentQueue.front();
+        auto& item = _contentQueue.front();
         std::cout << "Processing item with headline: " << item.title << std::endl;
 
         std::unique_ptr<ContentTile> contentTile = std::make_unique<ContentTile>(
             _texturedShader,
+            std::move(item.textureData),
             item.title
         );
 

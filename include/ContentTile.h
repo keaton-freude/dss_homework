@@ -39,14 +39,14 @@ private:
     Text _titleText;
 
     // Whether this tile is selected and should show extra info & expand itself 
-    bool _expanded;
+    bool _expanded = false;
 
 public:
     // Create a ContentTile at a default location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, const std::string &title);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title);
 
     // Create a ContentTile at a given location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, const std::string &title, glm::vec2 position);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, glm::vec2 position);
 
     void Draw(glm::mat4 view, glm::mat4 projection);
 
