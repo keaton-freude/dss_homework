@@ -75,6 +75,17 @@ target_link_libraries(DSSHomework glew)
 ## STB Image
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/stb)
 
+## OpenSSL
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/openssl/include)
+#find_library(OpenSSLLibrary
+#    NAMES libcrypto libssl
+#    HINTS "${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib"
+#)
+#target_link_libraries(DSSHomework ${OpenSSLLibrary})
+set(OPENSSL_ROOT_DIR ${PROJECT_SOURCE_DIR}/thirdparty/openssl)
+include(FindOpenSSL)
+target_link_libraries(DSSHomework OpenSSL::SSL OpenSSL::Crypto)
+
 ### Misc Stuff
 # Copy our resources folder into the build directory where our executable lives
 add_custom_command(TARGET DSSHomework POST_BUILD
