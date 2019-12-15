@@ -86,6 +86,9 @@ set(OPENSSL_ROOT_DIR ${PROJECT_SOURCE_DIR}/thirdparty/openssl)
 include(FindOpenSSL)
 target_link_libraries(DSSHomework OpenSSL::SSL OpenSSL::Crypto)
 
+## GLText
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/gltext)
+
 ### Misc Stuff
 # Copy our resources folder into the build directory where our executable lives
 add_custom_command(TARGET DSSHomework POST_BUILD
