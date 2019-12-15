@@ -13,7 +13,6 @@ ContentTileList::ContentTileList(std::shared_ptr<ShaderProgram> shader, glm::vec
 }
 
 void ContentTileList::Draw(glm::mat4 viewProjection) {
-    // Just some silly hand-constructed ContentTiles to test
     for (const auto& tile : _contentTiles) {
         tile->Draw(viewProjection);
     }
@@ -26,6 +25,8 @@ void ContentTileList::Resize(uint32_t width, uint32_t height) {
 
 void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
     // When this goes out of scope, the contentTilesMutex is released
-    std::lock_guard<std::mutex> guard(_contentTilesMutex);
+    //std::lock_guard<std::mutex> guard(_contentTilesMutex);
+    _contentTilesMutex.lock();
     _contentTiles.emplace_back(std::move(tile));
+    _contentTilesMutex.unlock();
 }

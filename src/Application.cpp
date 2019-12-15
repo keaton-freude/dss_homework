@@ -2,10 +2,19 @@
 #include "ShaderProgram.h"
 #include "Utility.h"
 #include "QuadMesh.h"
+#include "MLBGameContent.h"
 
 #include <GL/glew.h>
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
+
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+#include <httplib.h>
+#include <json.hpp>
+
+#include <thread>
+
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -41,13 +50,79 @@ Application::Application()
         glViewport(0, 0, (int)event.newWidth, (int)event.newHeight);
     });
 
-    glm::vec2 startPosition = glm::vec2(25.f, 500.f);
-    uint32_t spaceBetween = (_window->Width() * .2) + 25;
-    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), startPosition));
-    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 1), startPosition.y)));
-    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 2), startPosition.y)));
-    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 3), startPosition.y)));
-    _contentList->AddContentTile(std::make_unique<ContentTile>(_texturedShader, glm::vec2(.2f, .2f), _window->Width(), _window->Height(), glm::vec2(startPosition.x + (spaceBetween * 4), startPosition.y)));
+    _threads.push_back(std::thread([this](){
+        httplib::Client client("statsapi.mlb.com");
+
+        auto res = client.Get("/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=2018-06-10&sportId=1");
+        if (res && res->status == 200) {
+            // good to go
+            std::cout << "Got response and its good!" << std::endl;
+
+            // Decode the body into a JSON object
+            auto parsed = nlohmann::json::parse(res->body);
+            auto data = parsed.get<MLBStats>();
+            std::cout << "Got " << data.totalGames << " total games of data" << std::endl;
+
+            {
+                for(int i = 0; i < data.totalGames; ++i) {
+                    // Download a picture, for now just assume a 16:9 ratio.. probably use just 1440x720 as it'll look fine
+                    // because it'll be pretty downscaled
+                    httplib::SSLClient imageClient("securea.mlb.com");
+                    
+                    httplib::Headers headers = {
+                        { "Content-Type", "application/octet-stream"}
+                    };
+                    auto imageResponse = imageClient.Get("/assets/images/7/9/6/280664796/cuts/1920x1080/cut.jpg", headers);
+                    
+                    if (imageResponse && imageResponse->status == 200) {
+                        std::cout << "Got an image!" << std::endl;
+                        std::lock_guard(this->_contentQueueLock);
+                        auto &game = data.dates[0].games[i];
+                        std::vector<unsigned char> textureData(imageResponse->body.begin(), imageResponse->body.end());
+                        this->_contentQueue.emplace(ContentTileData(game.content.editorial.recap.home.headline, std::move(textureData)));
+                    }
+
+                    {
+                    }
+                }
+            }
+        } else {
+            std::abort();
+        }
+    }));
+}
+
+Application::~Application() {
+    for(auto& t : _threads) {
+        t.join();
+    }
+}
+
+void Application::ProcessContentQueue() {
+    const std::lock_guard<std::mutex> lock(_contentQueueLock);
+    if (_contentQueue.empty()) {
+        return;
+    }
+
+    while (!_contentQueue.empty()) {
+        const auto& item = _contentQueue.front();
+        std::cout << "Processing item with headline: " << item.title << std::endl;
+
+        std::unique_ptr<ContentTile> contentTile = std::make_unique<ContentTile>(
+            _texturedShader,
+            glm::vec2(0.2f, 0.2f),
+            _window->Width(),
+            _window->Height()
+        );
+
+        _contentList->AddContentTile(std::move(contentTile));
+
+        _contentQueue.pop();
+    }
+}
+
+void DoFetchTileDetails(std::string date) {
+
 }
 
 void Application::CalculateViewProjection() {
@@ -79,6 +154,7 @@ void Application::Run() {
         _background.Draw(_viewProjection);
         _contentList->Draw(_viewProjection);
         _window->SwapBuffers();
-        // Draw the TitleRenderer
+
+        ProcessContentQueue();
     }
 }

@@ -10,8 +10,13 @@
 #include "Background.h"
 #include "ContentTile.h"
 #include "ContentTileList.h"
+#include "ContentTileData.h"
 
 #include <memory>
+#include <thread>
+#include <list>
+#include <queue>
+#include <mutex>
 
 namespace dss
 {
@@ -43,13 +48,20 @@ private:
     std::unique_ptr<ContentTileList> _contentList;
     // TESTING, NOT LONG TERM
     glm::mat4 _viewProjection;
+    std::list<std::thread> _threads;
 
     void CalculateViewProjection();
 
+    // Background threads will push new content tile data into the queue
+    // The main thread will pull items off the queue and create the actual Content Tiles
+    std::mutex _contentQueueLock;
+    std::queue<ContentTileData> _contentQueue;
+
+    void ProcessContentQueue();
 
 public:
     Application();
-    ~Application() = default;
+    ~Application();
 
     // Starts a render loop, blocks until the application has closed for any reason
     void Run();
