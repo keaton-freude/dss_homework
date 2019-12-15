@@ -47,7 +47,8 @@ private:
     Background _background;
     std::unique_ptr<ContentTileList> _contentList;
     // TESTING, NOT LONG TERM
-    glm::mat4 _viewProjection;
+    glm::mat4 _view;
+    glm::mat4 _projection;
     std::list<std::thread> _threads;
 
     void CalculateViewProjection();

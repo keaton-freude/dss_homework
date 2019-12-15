@@ -29,7 +29,7 @@ public:
 
     void SetShaderUniform(const std::string &uniformName, glm::mat4x4 value) {
         // TODO REPLACE ME, TESTING ONLY
-        auto loc = glGetUniformLocation(_programHandle, "MVP");
+        auto loc = glGetUniformLocation(_programHandle, uniformName.c_str());
         glUniformMatrix4fv(loc, 1, GL_FALSE, &value[0][0]);
     }
 };

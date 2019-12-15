@@ -34,34 +34,23 @@ private:
     Texture _texture;
     Transform _transform;
 
-    // Represents the size of the ContentTile, in percentages relative to the entire screen size
-    glm::vec2 _size;
-
-    // size of the screen, in pixels. Multiply size against these to convert to screen-space coords
-    uint32_t _screenWidth;
-    uint32_t _screenHeight;
-
-    void CalculateSize();
 public:
     // Create a ContentTile at a default location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight);
+    ContentTile(std::shared_ptr<ShaderProgram> shader);
 
     // Create a ContentTile at a given location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight, glm::vec2 position);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 position);
 
-    void Draw(glm::mat4 viewProjection);
+    void Draw(glm::mat4 view, glm::mat4 projection);
 
-    void Resize(uint32_t width, uint32_t height) {
-        _screenWidth = width;
-        _screenHeight = height;
-        CalculateSize();
-    }
 
     Transform GetTransform() const;
 
     void SetPosition(glm::vec3 position);
 
     void SetScale(glm::vec3 scale);
+
+    void Resize(uint32_t width, uint32_t height);
 };
 
 }

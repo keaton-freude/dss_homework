@@ -41,8 +41,16 @@ private:
         return _screenWidth * unitAmount;
     }
 
+    float UnitToScreenSpaceHeight(float unitAmount) {
+        return _screenHeight * unitAmount;
+    }
+
     float ScreenSpaceToUnitWidth(float screenAmount) {
         return screenAmount / _screenWidth;
+    }
+
+    float ScreenSpaceToUnitHeight(float screenAmount) {
+        return screenAmount / _screenHeight;
     }
 
     // Take into account the current tiles, and whether one is selected and update their transforms
@@ -53,7 +61,7 @@ public:
 
     ContentTileList(std::shared_ptr<ShaderProgram> shader, glm::vec2 position, uint32_t screenWidth, uint32_t screenHeight);
 
-    void Draw(glm::mat4 viewProjection);
+    void Draw(glm::mat4 view, glm::mat4 projection);
 
     void Resize(uint32_t width, uint32_t height);
 

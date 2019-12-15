@@ -36,7 +36,7 @@ public:
     Background(std::shared_ptr<Window> window, std::shared_ptr<ShaderProgram> shader);
 
     // TODO: Is this how we want to pass the "VP" matrices?
-    void Draw(glm::mat4 viewProjection);
+    void Draw(glm::mat4 view, glm::mat4 projection);
 
     void SetSize(uint32_t width, uint32_t height);
 };

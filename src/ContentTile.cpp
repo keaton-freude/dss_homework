@@ -4,50 +4,37 @@
 
 using namespace dss;
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader)
 :   _shader(shader),
     _indexBuffer(&QuadMesh()),
     _vertexBuffer(&QuadMesh()),
     _texture("textures/example_content.jpg"),
-    _transform(),
-    _size(size),
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight)
+    _transform()
 {
     QuadMesh mesh;
     _indexBuffer = IndexBuffer(&mesh);
     _vertexBuffer = VertexBuffer(&mesh);
-
-    CalculateSize();
 }
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 size, uint32_t screenWidth, uint32_t screenHeight, glm::vec2 position)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 position)
 :   _shader(shader),
     _indexBuffer(&QuadMesh()),
     _vertexBuffer(&QuadMesh()),
     _texture("textures/example_content.jpg"),
-    _transform(glm::vec3(position.x, position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(static_cast<float>((float)screenWidth * size.x), static_cast<float>((float)screenHeight * size.y), 1.0f)),
-    _size(size),
-    _screenWidth(screenWidth),
-    _screenHeight(screenHeight)
+    _transform(glm::vec3(position.x, position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f))
 {
-
-    CalculateSize();
 }
 
-void ContentTile::CalculateSize() {
-    _transform.scale.x = static_cast<float>(_size.x * _screenWidth);
-    _transform.scale.y = static_cast<float>(_size.y * _screenHeight);
-}
-
-void ContentTile::Draw(glm::mat4 viewProjection) {
+void ContentTile::Draw(glm::mat4 view, glm::mat4 projection) {
     _indexBuffer.Bind();
     _vertexBuffer.Bind();
     _texture.Bind();
     PositionUV::SetVertexAttribPointers();
     _shader->Bind();
     auto model = _transform.GetModelMatrix();
-    _shader->SetShaderUniform("MVP", viewProjection * _transform.GetModelMatrix());
+    _shader->SetShaderUniform("Model", model);
+    _shader->SetShaderUniform("View", view);
+    _shader->SetShaderUniform("Projection", projection);
 
     glDrawElements(GL_TRIANGLES, _indexBuffer.GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
 }
@@ -62,4 +49,9 @@ void ContentTile::SetPosition(glm::vec3 position) {
 
 void ContentTile::SetScale(glm::vec3 scale) {
     _transform.scale = scale;
+}
+
+void ContentTile::Resize(uint32_t width, uint32_t height) {
+    _transform.scale.x = static_cast<float>(width);
+    _transform.scale.y = static_cast<float>(height);
 }

@@ -28,15 +28,10 @@ Application::Application()
         _texturedShader(std::make_shared<ShaderProgram>(FileReadAllText(GetPathToResource("shaders/textured.vert")),
             FileReadAllText(GetPathToResource("shaders/textured.frag")))),
         _background(_window, _texturedShader) {
-    // Now that the Window is created, our OpenGL context is created and set, safe to initialize glew
-    if (glewInit() != GLEW_OK) {
-        throw std::runtime_error("Failed to Initialize GLEW!");
-    }
+    
+    _background.SetSize(_window->Width(), _window->Height());
+    CalculateViewProjection();
 
-    auto ortho = glm::ortho(0.f, 1920.f, 0.f, 1080.f, -100.f, 100.f);
-    auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-
-    _viewProjection = ortho * view;
     //_contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec2(0.22f, 0.22f), _window->Width(), _window->Height(), glm::vec3(25.0f, 500.0f, 0.0f));
     _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(25.f, 500.f), _window->Width(), _window->Height());
 
@@ -109,10 +104,7 @@ void Application::ProcessContentQueue() {
         std::cout << "Processing item with headline: " << item.title << std::endl;
 
         std::unique_ptr<ContentTile> contentTile = std::make_unique<ContentTile>(
-            _texturedShader,
-            glm::vec2(0.2f, 0.2f),
-            _window->Width(),
-            _window->Height()
+            _texturedShader
         );
 
         _contentList->AddContentTile(std::move(contentTile));
@@ -126,10 +118,8 @@ void DoFetchTileDetails(std::string date) {
 }
 
 void Application::CalculateViewProjection() {
-    auto ortho = glm::ortho(0.f, static_cast<float>(_window->Width()), 0.f, static_cast<float>(_window->Height()), -100.f, 100.f);
-    auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-
-    _viewProjection = ortho * view;
+    _projection = glm::ortho(0.f, static_cast<float>(_window->Width()), 0.f, static_cast<float>(_window->Height()), -100.f, 100.f);
+    _view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 }
 
 void Application::Run() {
@@ -151,8 +141,8 @@ void Application::Run() {
         // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
 
-        _background.Draw(_viewProjection);
-        _contentList->Draw(_viewProjection);
+        _background.Draw(_view, _projection);
+        _contentList->Draw(_view, _projection);
         _window->SwapBuffers();
 
         ProcessContentQueue();

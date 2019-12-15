@@ -33,9 +33,9 @@ void ContentTileList::ResizeElements() {
     }
 }
 
-void ContentTileList::Draw(glm::mat4 viewProjection) {
+void ContentTileList::Draw(glm::mat4 view, glm::mat4 projection) {
     for (const auto& tile : _contentTiles) {
-        tile->Draw(viewProjection);
+        tile->Draw(view, projection);
     }
 }
 
@@ -45,16 +45,7 @@ void ContentTileList::Resize(uint32_t width, uint32_t height) {
 }
 
 void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
-    // Test out the scale stuff
-    /*if (_contentTiles.size() == 1) {
-        tile->SetScale(tile->GetTransform().scale * 1.25f);
-    }*/
-
-    if (_contentTiles.size() == 1) {
-        auto t = tile->GetTransform().scale;
-        t *= 1.25f;
-        tile->SetScale(t);
-    }
+    tile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
 
     // When this goes out of scope, the contentTilesMutex is released
     std::lock_guard<std::mutex> guard(_contentTilesMutex);
