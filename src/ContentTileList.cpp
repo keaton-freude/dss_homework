@@ -20,7 +20,7 @@ void ContentTileList::ResizeElements() {
     }
 
     // The first element is always offset from the left-most portion of the screen by the "SPACE_BETWEEN_TILES" constant
-    _contentTiles[0]->SetPosition(glm::vec3(UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES), 500.0f, 0.0f));
+    _contentTiles[0]->SetPosition(glm::vec3(UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES), 540.0f, 0.0f));
 
     // Now, each element is placed directly after the previous, with our pre-determined space-between value
     for(int i = 1; i < _contentTiles.size(); ++i) {
@@ -28,7 +28,7 @@ void ContentTileList::ResizeElements() {
         float amt1 = (UnitToScreenSpaceWidth(0.2f + _SPACE_BETWEEN_TILES));
         float amt2 = ScreenSpaceToUnitWidth(transform.scale.x) / 0.2f;
         transform.translation.x += amt1 * amt2;
-        transform.translation.y = 500.0f;
+        transform.translation.y = 540.0f;
         _contentTiles[i]->SetPosition(transform.translation);
     }
 }

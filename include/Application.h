@@ -11,6 +11,7 @@
 #include "ContentTile.h"
 #include "ContentTileList.h"
 #include "ContentTileData.h"
+#include "Text.h"
 
 #include <memory>
 #include <thread>

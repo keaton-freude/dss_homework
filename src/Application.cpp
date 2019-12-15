@@ -18,6 +18,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 using namespace dss;
 
 // Currently a very opinionated default. Should expand the sort of
@@ -28,6 +32,11 @@ Application::Application()
         _texturedShader(std::make_shared<ShaderProgram>(FileReadAllText(GetPathToResource("shaders/textured.vert")),
             FileReadAllText(GetPathToResource("shaders/textured.frag")))),
         _background(_window, _texturedShader) {
+
+
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(_window->GetWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 460");
     
     _background.SetSize(_window->Width(), _window->Height());
     CalculateViewProjection();
@@ -104,7 +113,8 @@ void Application::ProcessContentQueue() {
         std::cout << "Processing item with headline: " << item.title << std::endl;
 
         std::unique_ptr<ContentTile> contentTile = std::make_unique<ContentTile>(
-            _texturedShader
+            _texturedShader,
+            item.title
         );
 
         _contentList->AddContentTile(std::move(contentTile));
@@ -148,9 +158,19 @@ void Application::Run() {
 
         // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
+        ImGui::SetNextWindowSize(ImVec2(_window->Width(), _window->Height()));
+        ImGui::Begin("Hello, world!", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs);
 
         _background.Draw(_view, _projection);
         _contentList->Draw(_view, _projection);
+
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         _window->SwapBuffers();
 
         ProcessContentQueue();

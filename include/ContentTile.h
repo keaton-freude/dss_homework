@@ -7,6 +7,8 @@
 #include "Transform.h"
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include "Text.h"
+#include <string>
 
 #include <memory>
 
@@ -33,16 +35,18 @@ private:
     VertexBuffer _vertexBuffer;
     Texture _texture;
     Transform _transform;
+    std::string _title;
+    Text _titleText;
 
     // Whether this tile is selected and should show extra info & expand itself 
     bool _expanded;
 
 public:
     // Create a ContentTile at a default location
-    ContentTile(std::shared_ptr<ShaderProgram> shader);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, const std::string &title);
 
     // Create a ContentTile at a given location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, glm::vec2 position);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, const std::string &title, glm::vec2 position);
 
     void Draw(glm::mat4 view, glm::mat4 projection);
 
