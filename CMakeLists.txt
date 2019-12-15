@@ -99,6 +99,10 @@ target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/imgui)
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/imgui/examples)
 
+## URL 
+# Code taken from this Stack Overflow answer: https://stackoverflow.com/a/2616217
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/url)
+
 ### Misc Stuff
 # Copy our resources folder into the build directory where our executable lives
 add_custom_command(TARGET DSSHomework POST_BUILD
