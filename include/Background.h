@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "ShaderProgram.h"
 #include "glm/mat4x4.hpp"
+#include "TexturedDrawable.h"
 #include <memory>
 
 namespace dss
@@ -15,15 +16,11 @@ namespace dss
 /**
  *  Draws a background image 
  */
-class Background {
+class Background : public TexturedDrawable<PositionUV> {
 private:
-    std::unique_ptr<IMesh> _mesh;
+    // TODO FIX
     std::shared_ptr<Window> _window;
-    std::shared_ptr<ShaderProgram> _shader;
-    IndexBuffer _indexBuffer;
-    VertexBuffer _vertexBuffer;
-    Texture _texture;
-    
+
     // For the Background, we'll be modifying the scale parameter to ensure our
     // quad will cover the entire screen.
     Transform _transform;
@@ -35,8 +32,7 @@ public:
     // @window is the window we are painting a background over
     Background(std::shared_ptr<Window> window, std::shared_ptr<ShaderProgram> shader);
 
-    // TODO: Is this how we want to pass the "VP" matrices?
-    void Draw(glm::mat4 view, glm::mat4 projection);
+    virtual void Draw(const glm::mat4 &view, const glm::mat4 &projection) override;
 
     void SetSize(uint32_t width, uint32_t height);
 };
