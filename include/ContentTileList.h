@@ -30,10 +30,11 @@ private:
     std::vector<std::unique_ptr<ContentTile>> _contentTiles;
     std::mutex _contentTilesMutex;
     std::shared_ptr<ShaderProgram> _shader;
-    Transform _transform;
 
+    const float _SPACE_BETWEEN_TILES = 0.02f;
     uint32_t _screenWidth;
     uint32_t _screenHeight;
+    std::shared_ptr<Transform> _transform;
 
     // Which tile in our vector is selected
     size_t _selectedTileIndex = 0;
@@ -41,7 +42,6 @@ private:
     // 25% larger for expanded tiles
     const float EXPAND_SCALE_FACTOR = 1.25f;
 
-    const float _SPACE_BETWEEN_TILES = 0.02f;
 
     float UnitToScreenSpaceWidth(float unitAmount) {
         return _screenWidth * unitAmount;
@@ -59,10 +59,16 @@ private:
         return screenAmount / _screenHeight;
     }
 
+    // This method will add a tile, to the contentTiles list
+    // This method is thread-safe
+    void AddContentTile(std::unique_ptr<ContentTile> &&tile);
+
     // Take into account the current tiles, and whether one is selected and update their transforms
     void ResizeElements();
     // last is the previously expanded tile, current is the tile to be expanded
     void ExpandTile(size_t last, size_t current);
+
+    void BringSelectedTileIntoView();
 public:
     // TODO: Probably delete
     ContentTileList();
@@ -73,9 +79,7 @@ public:
 
     void Resize(uint32_t width, uint32_t height);
 
-    // This method will add a tile, to the contentTiles list
-    // This method is thread-safe
-    void AddContentTile(std::unique_ptr<ContentTile> &&tile);
+    void AddContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title);
 
     void SelectNextTile();
 

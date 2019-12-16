@@ -1,4 +1,5 @@
 #include "ContentTileList.h"
+#include <iostream>
 
 #include <utility>
 
@@ -6,11 +7,10 @@ using namespace dss;
 
 ContentTileList::ContentTileList(std::shared_ptr<ShaderProgram> shader, glm::vec2 position, uint32_t screenWidth, uint32_t screenHeight) 
     :   _shader(shader),
-        _transform(glm::vec3(0.0f, UnitToScreenSpaceWidth(0.5f), 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)),
         _screenWidth(screenWidth),
-        _screenHeight(screenHeight)
+        _screenHeight(screenHeight),
+        _transform(std::make_shared<Transform>(glm::vec3(UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES), position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)))
 {
-    uint32_t spaceBetween = (screenWidth * .2f) + 25;
 }
 
 void ContentTileList::ResizeElements() {
@@ -19,17 +19,47 @@ void ContentTileList::ResizeElements() {
         return;
     }
 
-    // The first element is always offset from the left-most portion of the screen by the "SPACE_BETWEEN_TILES" constant
-    _contentTiles[0]->SetPosition(glm::vec3(UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES), 540.0f, 0.0f));
+    _contentTiles[0]->SetXOffset(0.0f);
 
     // Now, each element is placed directly after the previous, with our pre-determined space-between value
     for(int i = 1; i < _contentTiles.size(); ++i) {
-        auto transform = _contentTiles[i - 1]->GetTransform();
-        float amt1 = (UnitToScreenSpaceWidth(0.2f + _SPACE_BETWEEN_TILES));
-        float amt2 = ScreenSpaceToUnitWidth(transform.scale.x) / 0.2f;
-        transform.translation.x += amt1 * amt2;
-        transform.translation.y = 540.0f;
-        _contentTiles[i]->SetPosition(transform.translation);
+        auto previousTransform = _contentTiles[i - 1]->GetTransform();
+
+        // Find the right-edge of the previous tile
+        float rightEdgeOffset = previousTransform.translation.x + previousTransform.scale.x;
+        // Add on our per-tile padding
+        rightEdgeOffset += UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES);
+
+        _contentTiles[i]->SetXOffset(rightEdgeOffset);
+    }
+}
+
+// Check two scenarios: selected tile is out of view to the left and selected tile is out of view to the right
+void ContentTileList::BringSelectedTileIntoView() {
+    const auto &expandedTile = _contentTiles[_selectedTileIndex];
+
+    // Determine the position of the right-edge of the selected tile..
+    const auto expandedRight = expandedTile->GetTransform().translation.x + expandedTile->GetTransform().scale.x;
+    // Subtract off our own translation, then we can compare that to the window dimensions
+    const auto adjusted = expandedRight + _transform->translation.x;
+
+    // Don't compare to screen width directly, instead account for some buffer 
+    const auto adjustedScreenWidth = _screenWidth - UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES);
+
+    if (adjusted > adjustedScreenWidth) {
+        const auto amount = adjusted - adjustedScreenWidth;
+
+        _transform->translation.x -= amount;
+    }
+
+    const auto tileLeft = expandedTile->GetTransform().translation.x;
+
+    const auto adjusted2 = tileLeft + _transform->translation.x;
+
+    if (adjusted2 < UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES)) {
+        const auto amount = UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES) - adjusted2;
+
+        _transform->translation.x += amount;
     }
 }
 
@@ -53,11 +83,22 @@ void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
         tile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
     }
 
+    tile->SetParentTransform(_transform);
+
     // When this goes out of scope, the contentTilesMutex is released
     std::lock_guard<std::mutex> guard(_contentTilesMutex);
     _contentTiles.emplace_back(std::move(tile));
 
     ResizeElements();
+}
+
+void ContentTileList::AddContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title) {
+    AddContentTile(std::make_unique<ContentTile>(
+        shader,
+        std::move(textureData),
+        title,
+        _transform
+    ));
 }
 
 void ContentTileList::ExpandTile(size_t last, size_t current) {
@@ -68,8 +109,6 @@ void ContentTileList::ExpandTile(size_t last, size_t current) {
     lastTile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
     currentTile->SetExpand(true);
     currentTile->Resize(UnitToScreenSpaceWidth(0.2f * EXPAND_SCALE_FACTOR), UnitToScreenSpaceHeight(0.2f * EXPAND_SCALE_FACTOR));
-
-    ResizeElements();
 }
 
 void ContentTileList::SelectNextTile() {
@@ -80,6 +119,9 @@ void ContentTileList::SelectNextTile() {
 
     ExpandTile(_selectedTileIndex, _selectedTileIndex + 1);
     _selectedTileIndex++;
+    ResizeElements();
+
+    BringSelectedTileIntoView();
 }
 
 void ContentTileList::SelectPreviousTile() {
@@ -90,4 +132,7 @@ void ContentTileList::SelectPreviousTile() {
 
     ExpandTile(_selectedTileIndex, _selectedTileIndex - 1);
     _selectedTileIndex--;
+    ResizeElements();
+
+    BringSelectedTileIntoView();
 }

@@ -42,8 +42,7 @@ Application::Application()
     _background.SetSize(_window->Width(), _window->Height());
     CalculateViewProjection();
 
-    //_contentTile = std::make_unique<ContentTile>(_texturedShader, glm::vec2(0.22f, 0.22f), _window->Width(), _window->Height(), glm::vec3(25.0f, 500.0f, 0.0f));
-    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(25.f, 500.f), _window->Width(), _window->Height());
+    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(25.f, 540.f), _window->Width(), _window->Height());
 
     // Resize the background if the window changes
     _window->RegisterResizeEventCallback([this](WindowResizeEvent event) {
@@ -118,14 +117,7 @@ void Application::ProcessContentQueue() {
     while (!_contentQueue.empty()) {
         auto& item = _contentQueue.front();
         std::cout << "Processing item with headline: " << item.title << std::endl;
-
-        std::unique_ptr<ContentTile> contentTile = std::make_unique<ContentTile>(
-            _texturedShader,
-            std::move(item.textureData),
-            item.title
-        );
-
-        _contentList->AddContentTile(std::move(contentTile));
+        _contentList->AddContentTile(_texturedShader, std::move(item.textureData), item.title);
 
         _contentQueue.pop();
     }
