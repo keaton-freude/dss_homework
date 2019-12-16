@@ -12,6 +12,7 @@
 #include "ContentTileList.h"
 #include "ContentTileData.h"
 #include "Text.h"
+#include "CoordinateConverter.h"
 
 #include <memory>
 #include <thread>
@@ -51,6 +52,7 @@ private:
     glm::mat4 _view;
     glm::mat4 _projection;
     std::list<std::thread> _threads;
+    std::shared_ptr<CoordinateConverter> _coordConverter;
 
     void CalculateViewProjection();
 

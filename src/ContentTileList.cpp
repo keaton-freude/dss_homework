@@ -1,15 +1,15 @@
-#include "ContentTileList.h"
 #include <iostream>
-
 #include <utility>
+
+#include "ContentTileList.h"
 
 using namespace dss;
 
-ContentTileList::ContentTileList(std::shared_ptr<ShaderProgram> shader, glm::vec2 position, uint32_t screenWidth, uint32_t screenHeight) 
+ContentTileList::ContentTileList(std::shared_ptr<ShaderProgram> shader, glm::vec2 position, std::shared_ptr<CoordinateConverter> coordConverter) 
     :   _shader(shader),
-        _screenWidth(screenWidth),
-        _screenHeight(screenHeight),
-        _transform(std::make_shared<Transform>(glm::vec3(UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES), position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)))
+        _transform(std::make_shared<Transform>(glm::vec3(coordConverter->UnitToScreenSpaceWidth(SPACE_BETWEEN_TILES), 
+            position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f))),
+        _coordConverter(coordConverter)
 {
 }
 
@@ -28,7 +28,7 @@ void ContentTileList::ResizeElements() {
         // Find the right-edge of the previous tile
         float rightEdgeOffset = previousTransform.translation.x + previousTransform.scale.x;
         // Add on our per-tile padding
-        rightEdgeOffset += UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES);
+        rightEdgeOffset += _coordConverter->UnitToScreenSpaceWidth(SPACE_BETWEEN_TILES);
 
         _contentTiles[i]->SetXOffset(rightEdgeOffset);
     }
@@ -36,28 +36,30 @@ void ContentTileList::ResizeElements() {
 
 // Check two scenarios: selected tile is out of view to the left and selected tile is out of view to the right
 void ContentTileList::BringSelectedTileIntoView() {
+    // Handle the case where the selected tile is past the edge of the right side of the window
     const auto &expandedTile = _contentTiles[_selectedTileIndex];
 
     // Determine the position of the right-edge of the selected tile..
     const auto expandedRight = expandedTile->GetTransform().translation.x + expandedTile->GetTransform().scale.x;
     // Subtract off our own translation, then we can compare that to the window dimensions
-    const auto adjusted = expandedRight + _transform->translation.x;
+    const auto adjustedRight = expandedRight + _transform->translation.x;
 
-    // Don't compare to screen width directly, instead account for some buffer 
-    const auto adjustedScreenWidth = _screenWidth - UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES);
+    // Don't compare to screen width directly, instead account for some buffer space
+    const auto adjustedScreenWidth = _coordConverter->ScreenWidth() - _coordConverter->UnitToScreenSpaceWidth(SPACE_BETWEEN_TILES);
 
-    if (adjusted > adjustedScreenWidth) {
-        const auto amount = adjusted - adjustedScreenWidth;
+    if (adjustedRight > adjustedScreenWidth) {
+        const auto amount = adjustedRight - adjustedScreenWidth;
 
         _transform->translation.x -= amount;
     }
 
-    const auto tileLeft = expandedTile->GetTransform().translation.x;
+    // Handle the case where the selected tile is past the edge of the left side of the window
+    const auto expandedLeft = expandedTile->GetTransform().translation.x;
 
-    const auto adjusted2 = tileLeft + _transform->translation.x;
+    const auto adjustedLeft = expandedLeft + _transform->translation.x;
 
-    if (adjusted2 < UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES)) {
-        const auto amount = UnitToScreenSpaceWidth(_SPACE_BETWEEN_TILES) - adjusted2;
+    if (adjustedLeft < _coordConverter->UnitToScreenSpaceWidth(SPACE_BETWEEN_TILES)) {
+        const auto amount = _coordConverter->UnitToScreenSpaceWidth(SPACE_BETWEEN_TILES) - adjustedLeft;
 
         _transform->translation.x += amount;
     }
@@ -69,18 +71,14 @@ void ContentTileList::Draw(glm::mat4 view, glm::mat4 projection) {
     }
 }
 
-void ContentTileList::Resize(uint32_t width, uint32_t height) {
-    _screenWidth = width;
-    _screenHeight = height;
-}
-
 void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
     // If this is the first tile, make sure its selected
     if (_contentTiles.size() == 0) {
         tile->SetExpand(true);
-        tile->Resize(UnitToScreenSpaceWidth(0.2f * EXPAND_SCALE_FACTOR), UnitToScreenSpaceHeight(0.2f * EXPAND_SCALE_FACTOR));
+        tile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR), 
+            _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR));
     } else {
-        tile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
+        tile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE), _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE));
     }
 
     tile->SetParentTransform(_transform);
@@ -106,9 +104,10 @@ void ContentTileList::ExpandTile(size_t last, size_t current) {
     auto &currentTile = _contentTiles[current];
 
     lastTile->SetExpand(false);
-    lastTile->Resize(UnitToScreenSpaceWidth(0.2f), UnitToScreenSpaceHeight(0.2f));
+    lastTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE), _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE));
     currentTile->SetExpand(true);
-    currentTile->Resize(UnitToScreenSpaceWidth(0.2f * EXPAND_SCALE_FACTOR), UnitToScreenSpaceHeight(0.2f * EXPAND_SCALE_FACTOR));
+    currentTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR), 
+        _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR));
 }
 
 void ContentTileList::SelectNextTile() {

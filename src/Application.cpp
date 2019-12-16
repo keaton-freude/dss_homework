@@ -32,7 +32,9 @@ Application::Application()
         _input(std::make_unique<Input>(_window)),
         _texturedShader(std::make_shared<ShaderProgram>(FileReadAllText(GetPathToResource("shaders/textured.vert")),
             FileReadAllText(GetPathToResource("shaders/textured.frag")))),
-        _background(_window, _texturedShader) {
+        _background(_window, _texturedShader),
+        _coordConverter(std::make_shared<CoordinateConverter>(_window))
+{
 
 
     ImGui::CreateContext();
@@ -42,16 +44,12 @@ Application::Application()
     _background.SetSize(_window->Width(), _window->Height());
     CalculateViewProjection();
 
-    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(25.f, 540.f), _window->Width(), _window->Height());
+    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(0.0f, 540.f), _coordConverter);
 
-    // Resize the background if the window changes
+    // Need to relay window dimension changes to components which need it
     _window->RegisterResizeEventCallback([this](WindowResizeEvent event) {
         this->_background.SetSize(event.newWidth, event.newHeight);
         this->CalculateViewProjection();
-        this->_contentList->Resize(event.newWidth, event.newHeight);
-
-        // Hmm this doesn't _exactly_ belong here.. Don't want opengl concepts flooding app code..
-        glViewport(0, 0, (int)event.newWidth, (int)event.newHeight);
     });
 
     _threads.push_back(std::thread([this](){
