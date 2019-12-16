@@ -1,20 +1,20 @@
 #pragma once
 
+#include <string>
+#include <memory>
+
+#include "glm/vec3.hpp"
+#include "glm/mat4x4.hpp"
+
 #include "ShaderProgram.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "VertexFormat.h"
 #include "Texture.h"
+#include "TexturedDrawable.h"
 #include "Transform.h"
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
 #include "Text.h"
-#include <string>
 
-#include <memory>
-
-// TODO TODO TODO
-// Extract the drawing part _out_ of this and the background class. they are almost exactly the same
-// think something like DrawableNode in Nimble
 
 namespace dss
 {
@@ -25,18 +25,17 @@ namespace dss
  * 
  *  ContentTiles shouldn't place themselves, but rather be placed explicitly
  * 
- *  ContentTiles will load a default texture, until a Texture is set via the
- *  SetTexture method
  */
-class ContentTile {
+class ContentTile : public TexturedDrawable<PositionUV> {
 private:
-    std::shared_ptr<ShaderProgram> _shader;
-    IndexBuffer _indexBuffer;
-    VertexBuffer _vertexBuffer;
-    Texture _texture;
+    // Local transform of the Content Tile
     Transform _transform;
+
+    // The transform of our parent (ContentTileList), this allows us to easily
+    // keep tiles grouped together and moved together, relative to the parent
     std::shared_ptr<Transform> _parentTransform;
-    std::string _title;
+
+    // Title text
     Text _titleText;
 
     // Whether this tile is selected and should show extra info & expand itself 
@@ -52,8 +51,7 @@ public:
     // Create a ContentTile at a given location
     ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, std::shared_ptr<Transform> parentTransform, glm::vec2 position);
 
-    void Draw(glm::mat4 view, glm::mat4 projection);
-
+    virtual void Draw(const glm::mat4 &view, const glm::mat4 &projection) override;
 
     Transform GetTransform() const;
 
@@ -64,6 +62,8 @@ public:
     void Resize(uint32_t width, uint32_t height);
 
     void SetExpand(bool value);
+
+    bool IsExpanded() const;
 
     void SetParentTransform(std::shared_ptr<Transform> transform);
 };
