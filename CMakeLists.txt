@@ -89,7 +89,7 @@ target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/
 #    HINTS "${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib"
 #)
 #target_link_libraries(DSSHomework ${OpenSSLLibrary})
-set(OPENSSL_ROOT_DIR ${PROJECT_SOURCE_DIR}/thirdparty/openssl)
+set(ENV{OPENSSL_ROOT_DIR} "${PROJECT_SOURCE_DIR}/thirdparty/openssl")
 set(OPENSSL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/openssl/include)
 set(OPENSSL_SSL_LIBRARY ${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib/libssl.lib)
 set(OPENSSL_CRYPTO_LIBRARY ${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib/libssl.lib)
