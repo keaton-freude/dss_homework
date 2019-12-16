@@ -45,15 +45,30 @@ class Application {
 private:
     // The Window this application uses for Input & Rendering
     std::shared_ptr<Window> _window;
+
+    // Input events for the window can be queried from this
     std::unique_ptr<Input> _input;
+
+    // The shader we will use to render the background and content
     std::shared_ptr<ShaderProgram> _texturedShader;
+
+    // Provides capability for drawing a full-window texture
     Background _background;
+
+    // The content list we will render based on external data from MLB stats API
     std::unique_ptr<ContentTileList> _contentList;
-    // TESTING, NOT LONG TERM
+
+    // Our view matrix
     glm::mat4 _view;
+
+    // Our projection matrix: Will be an ortho projection with dimensions matching
+    // our screen
     glm::mat4 _projection;
-    std::list<std::thread> _threads;
+
+    // Provides a way to reliably convert coordinates between unit and screen space
     std::shared_ptr<CoordinateConverter> _coordConverter;
+
+    // Fetch stats from MLB API and notify observers
     MLBStatsFetcher _statsFetcher;
 
     void CalculateViewProjection();
@@ -67,7 +82,6 @@ private:
 
 public:
     Application();
-    ~Application();
 
     // Starts a render loop, blocks until the application has closed for any reason
     void Run();

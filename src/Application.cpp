@@ -1,27 +1,23 @@
+#include <thread>
+#include <stdexcept>
+#include <iostream>
+#include <fstream>
+
+#include <GL/glew.h>
+#define CPPHTTPLIB_OPENSSL_SUPPORT
+#include <httplib.h>
+#include <json.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "Application.h"
 #include "ShaderProgram.h"
 #include "Utility.h"
 #include "QuadMesh.h"
 #include "MLBGameContent.h"
 #include "Url.h"
-
-#include <GL/glew.h>
-#include <stdexcept>
-#include <iostream>
-#include <fstream>
-
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-#include <httplib.h>
-#include <json.hpp>
-
-#include <thread>
-
-
-#include <glm/gtc/matrix_transform.hpp>
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 
 using namespace dss;
 
@@ -42,6 +38,7 @@ Application::Application()
 
     _statsFetcher.StartForDate("2018-06-10");
 
+    // Required ImGui setup for our combination of Gfx API & Windowing API
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(_window->GetWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
@@ -57,59 +54,6 @@ Application::Application()
         this->CalculateViewProjection();
         this->_contentList->RespondToResize();
     });
-
-    /*_threads.push_back(std::thread([this](){
-        httplib::Client client("statsapi.mlb.com");
-
-        auto res = client.Get("/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=2018-06-10&sportId=1");
-        if (res && res->status == 200) {
-            // good to go
-            std::cout << "Got response and its good!" << std::endl;
-
-            // Decode the body into a JSON object
-            auto parsed = nlohmann::json::parse(res->body);
-            auto data = parsed.get<MLBStats>();
-            std::cout << "Got " << data.totalGames << " total games of data" << std::endl;
-
-            {
-                for(int i = 0; i < data.totalGames; ++i) {
-                    // Download a picture, for now just assume a 16:9 ratio.. probably use just 1280x720 as it'll look fine
-                    // because it'll be pretty downscaled
-
-                    // Take the image source and break it out into the host and endpoint
-                    auto url = Url(data.dates[0].games[i].content.editorial.recap.home.photo.cuts["1280x720"].src);
-
-                    httplib::SSLClient imageClient(url.Host().c_str());
-                    
-                    httplib::Headers headers = {
-                        { "Content-Type", "application/octet-stream"}
-                    };
-
-
-                    auto imageResponse = imageClient.Get(url.Path().c_str(), headers);
-                    
-                    if (imageResponse && imageResponse->status == 200) {
-                        std::cout << "Got an image!" << std::endl;
-                        std::lock_guard(this->_contentQueueLock);
-                        auto &game = data.dates[0].games[i];
-                        std::vector<unsigned char> textureData(imageResponse->body.begin(), imageResponse->body.end());
-                        this->_contentQueue.emplace(ContentTileData(game.content.editorial.recap.home.headline, std::move(textureData)));
-                    }
-
-                    {
-                    }
-                }
-            }
-        } else {
-            std::abort();
-        }
-    }));*/
-}
-
-Application::~Application() {
-    for(auto& t : _threads) {
-        t.join();
-    }
 }
 
 void Application::ProcessContentQueue() {
