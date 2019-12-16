@@ -35,7 +35,12 @@ Application::Application()
         _background(_window, _texturedShader),
         _coordConverter(std::make_shared<CoordinateConverter>(_window))
 {
+    _statsFetcher.AddObserver([this](std::string title, std::vector<unsigned char>&& textureData){
+        std::lock_guard<std::mutex> lock(this->_contentQueueLock);
+        _contentQueue.push(ContentTileData(title, std::move(textureData)));
+    });
 
+    _statsFetcher.StartForDate("2018-06-10");
 
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(_window->GetWindow(), true);
@@ -53,7 +58,7 @@ Application::Application()
         this->_contentList->RespondToResize();
     });
 
-    _threads.push_back(std::thread([this](){
+    /*_threads.push_back(std::thread([this](){
         httplib::Client client("statsapi.mlb.com");
 
         auto res = client.Get("/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&date=2018-06-10&sportId=1");
@@ -98,7 +103,7 @@ Application::Application()
         } else {
             std::abort();
         }
-    }));
+    }));*/
 }
 
 Application::~Application() {

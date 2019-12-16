@@ -13,6 +13,7 @@ add_executable(DSSHomework
     thirdparty/imgui/imgui_draw.cpp
     thirdparty/imgui/imgui_widgets.cpp
     thirdparty/imgui/imgui.cpp
+    src/MLBStatsFetcher.cpp
     src/Text.cpp
     src/ContentTileList.cpp
     src/ContentTile.cpp

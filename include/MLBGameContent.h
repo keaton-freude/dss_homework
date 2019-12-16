@@ -18,14 +18,6 @@ namespace dss
 // The API returns a huge amount of data and fields, but we will only be targeting
 // the subset we need
 
-
-
-
-
-
-
-
-
 struct MLBGamePhotoCut {
     std::string aspectRatio;
     uint32_t width;
@@ -71,43 +63,43 @@ struct MLBStats {
 // Why?? ADL??
 // Order from most-nested to least (matching structs above)
 
-void from_json(const json &j, MLBGamePhotoCut &cut) {
+inline void from_json(const json &j, MLBGamePhotoCut &cut) {
     j.at("aspectRatio").get_to(cut.aspectRatio);
     j.at("width").get_to(cut.width);
     j.at("height").get_to(cut.height);
     j.at("src").get_to(cut.src);
 }
 
-void from_json(const json &j, MLBGamePhoto &photo) {
+inline void from_json(const json &j, MLBGamePhoto &photo) {
     j.at("cuts").get_to(photo.cuts);
 }
 
-void from_json(const json &j, MLBGameHome &home) {
+inline void from_json(const json &j, MLBGameHome &home) {
     j.at("photo").get_to(home.photo);
     j.at("headline").get_to(home.headline);
 }
 
-void from_json(const json &j, MLBGameRecap &recap) {
+inline void from_json(const json &j, MLBGameRecap &recap) {
     j.at("home").get_to(recap.home);
 }
 
-void from_json(const json &j, MLBGameEditorial &editorial) {
+inline void from_json(const json &j, MLBGameEditorial &editorial) {
     j.at("recap").get_to(editorial.recap);
 }
 
-void from_json(const json &j, MLBGameContent &gameContent) {
+inline void from_json(const json &j, MLBGameContent &gameContent) {
     j.at("editorial").get_to(gameContent.editorial);
 }
 
-void from_json(const json &j, MLBGame &game) {
+inline void from_json(const json &j, MLBGame &game) {
     j.at("content").get_to(game.content);
 }
 
-void from_json(const json &j, MLBGameContentDate &date) {
+inline void from_json(const json &j, MLBGameContentDate &date) {
     j.at("games").get_to(date.games);
 }
 
-void from_json(const json &j, MLBStats &stats) {
+inline void from_json(const json &j, MLBStats &stats) {
     j.at("totalGames").get_to(stats.totalGames);
     j.at("dates").get_to(stats.dates);
 }
