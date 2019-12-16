@@ -40,6 +40,7 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
         // below works..?
         Window *ourWindow = static_cast<Window *>(userPointer);
 
+        glViewport(0, 0, width, height);
         ourWindow->_width = width;
         ourWindow->_height = height;
         for(const auto& callback : ourWindow->_resizeCallbacks) {
