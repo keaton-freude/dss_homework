@@ -84,15 +84,7 @@ target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/
 
 ## OpenSSL
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/openssl/include)
-#find_library(OpenSSLLibrary
-#    NAMES libcrypto libssl
-#    HINTS "${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib"
-#)
-#target_link_libraries(DSSHomework ${OpenSSLLibrary})
-set(ENV{OPENSSL_ROOT_DIR} "${PROJECT_SOURCE_DIR}/thirdparty/openssl")
-set(OPENSSL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/openssl/include)
-set(OPENSSL_SSL_LIBRARY ${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib/libssl.lib)
-set(OPENSSL_CRYPTO_LIBRARY ${PROJECT_SOURCE_DIR}/thirdparty/openssl/lib/libssl.lib)
+message(${OPENSSL_ROOT_DIR})
 include(FindOpenSSL)
 target_link_libraries(DSSHomework OpenSSL::SSL OpenSSL::Crypto)
 
