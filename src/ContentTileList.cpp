@@ -8,7 +8,7 @@ using namespace dss;
 ContentTileList::ContentTileList(std::shared_ptr<ShaderProgram> shader, glm::vec2 position, std::shared_ptr<CoordinateConverter> coordConverter) 
     :   _shader(shader),
         _transform(std::make_shared<Transform>(glm::vec3(coordConverter->UnitToScreenSpaceWidth(SPACE_BETWEEN_TILES), 
-            position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f))),
+            coordConverter->UnitToScreenSpaceHeight(position.y), 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f))),
         _coordConverter(coordConverter)
 {
 }
@@ -17,6 +17,17 @@ void ContentTileList::ResizeElements() {
     // early out
     if (_contentTiles.size() == 0) {
         return;
+    }
+
+    // Find the expanded element and make sure its size is correct
+    for(const auto& contentTile : _contentTiles) {
+        if (contentTile->IsExpanded()) {
+            contentTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR), 
+                _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR));
+        } else {
+            // For other tiles, resize them based on the current screen dimensions
+            contentTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE), _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE));
+        }
     }
 
     _contentTiles[0]->SetXOffset(0.0f);
@@ -75,10 +86,6 @@ void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
     // If this is the first tile, make sure its selected
     if (_contentTiles.size() == 0) {
         tile->SetExpand(true);
-        tile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR), 
-            _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR));
-    } else {
-        tile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE), _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE));
     }
 
     tile->SetParentTransform(_transform);
@@ -133,5 +140,11 @@ void ContentTileList::SelectPreviousTile() {
     _selectedTileIndex--;
     ResizeElements();
 
+    BringSelectedTileIntoView();
+}
+
+void ContentTileList::RespondToResize() {
+    _transform->translation.y = _coordConverter->UnitToScreenSpaceHeight(0.5f);
+    this->ResizeElements();
     BringSelectedTileIntoView();
 }

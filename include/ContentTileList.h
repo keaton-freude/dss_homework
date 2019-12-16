@@ -95,6 +95,9 @@ public:
 
     // Select the previous tile in the list
     void SelectPreviousTile();
+
+    // Recalculate element layout positioning
+    void RespondToResize();
 };
 
 }

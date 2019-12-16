@@ -35,7 +35,7 @@ private:
     std::string _name;
 
     // List of observers of resize events
-    std::list<std::function<void(WindowResizeEvent)>> _resizeCallbacks;
+    std::list<std::function<void(WindowResizeEvent)>> _resizeCallbacks{};
 
     // Called when the GLFW window is resized
     void WindowSizeCallback(GLFWwindow* window, int width, int height);

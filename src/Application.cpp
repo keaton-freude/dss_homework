@@ -44,12 +44,13 @@ Application::Application()
     _background.SetSize(_window->Width(), _window->Height());
     CalculateViewProjection();
 
-    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(0.0f, 540.f), _coordConverter);
+    _contentList = std::make_unique<ContentTileList>(_texturedShader, glm::vec2(0.0f, 0.5f), _coordConverter);
 
     // Need to relay window dimension changes to components which need it
     _window->RegisterResizeEventCallback([this](WindowResizeEvent event) {
         this->_background.SetSize(event.newWidth, event.newHeight);
         this->CalculateViewProjection();
+        this->_contentList->RespondToResize();
     });
 
     _threads.push_back(std::thread([this](){

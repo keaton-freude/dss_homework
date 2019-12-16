@@ -38,7 +38,8 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
 
         // Hmm, dynamic_cast wont work on a void*.. any nice way to ensure
         // below works..?
-        Window *ourWindow = static_cast<Window *>(userPointer);
+        GlfwUserPointer *glfwUserPointer = static_cast<GlfwUserPointer *>(userPointer);
+        Window *ourWindow = glfwUserPointer->window;
 
         glViewport(0, 0, width, height);
         ourWindow->_width = width;
