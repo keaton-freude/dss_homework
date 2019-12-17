@@ -101,19 +101,18 @@ target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/Poco
 target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoUtild.lib)
 target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoXMLd.lib)
 
-## TODO:
-# Copy the Poco DLLs if needed
+file(GLOB POCO_RUNTIME_LIBRARIES
+    ${CMAKE_CURRENT_LIST_DIR}/thirdparty/poco/bin/*.dll
+)
 
-### Misc Stuff
-# Copy our resources folder into the build directory where our executable lives
+# Copy all required resources (graphics resources, certs, poco runtime DLLs) next to the binary
 add_custom_command(TARGET DSSHomework POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${POCO_RUNTIME_LIBRARIES} $<TARGET_FILE_DIR:DSSHomework>
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:DSSHomework>/resources)
-
-# Copy the required DLL/.so files into our build directory (NOTE: Might be a more "cmake-way" to do this)
-#add_custom_command(TARGET DSSHomework POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#    ${PROJECT_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}/glew32d.dll
-#    )
+    ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:DSSHomework>/resources
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/thirdparty/openssl/cacert.pem $<TARGET_FILE_DIR:DSSHomework>
+    )
 
 set_target_properties(DSSHomework PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/bin/)

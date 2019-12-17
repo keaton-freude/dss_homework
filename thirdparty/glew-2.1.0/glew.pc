@@ -1,6 +1,6 @@
-prefix=C:/Program Files (x86)/DSSHomework
+prefix=C:/Program Files/DSSHomework
 exec_prefix=${prefix}
-libdir=C:/Program Files (x86)/DSSHomework/lib
+libdir=C:/Program Files/DSSHomework/lib
 includedir=${prefix}/include
 
 Name: glew
