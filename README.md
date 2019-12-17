@@ -20,6 +20,11 @@ Below instructions are for building via CLI. CMake GUI will work as well, but ca
 4. Build the project: `cmake --build .`
 5. If successful, the build artifacts (including necessary resources, and DLLs) are present at: `${REPO_ROOT}/build/bin/Debug`
 
+### Tested Configurations:
+Windows 10 RS5 (17763.864) with Visual Studio 2017, CMake 3.16.1
+
+CI Environment: Windows Server 1803 with Visual Studio 2017, CMake 3.12.3
+
 # Run
 Two important things to be aware of:
 
