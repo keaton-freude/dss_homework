@@ -1,3 +1,3 @@
 echo off
 dir
-cd ./build && cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build .
+cd ./build && cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=DEBUG .. && cmake --build . && cd ./bin && 7z a DSSHomework.zip .\Debug\*

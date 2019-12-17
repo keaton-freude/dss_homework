@@ -2,3 +2,13 @@ language: cpp
 os: windows
 script:
   - ./build.bat
+deploy:
+  provider: releases
+  api_key:
+    secure: nM7R7Whc/vg0tZuZ9A6LBdF5T+hR+VN/so33D/xoQCcCylNTl2jo/IwCq3/U92UGxmY702uEm6fyagaWG/S2ntau6XkfDcJfVqIdNwElZTeNeKy2mcp7lRN9NGUB3Q9jDpGmdiWxaMNqnUXZ0GWQA9n07og7Pyz0HcQj1acE1zPbqcgfWINYEXZDEDMti5cf7cJyooyfG8qg6e3p2VvJS4oZ9wv+diuZVHsG3t1KXHeUFkdNXDt3au90+KumdHCfHsEmk69dWtzdD7cYw5/9ATsjYhqDqRAG7jKanV689UHPTe0Kbia4aVYx8QDjMC8uUVnxoZP7bU6IjuBaxaac+cI7SjjuKkWFaWPJMYKuxSdQxwM4A9g++0VgwY8Cuf3rBPz/iNT61sOG2wAdiGPjRxdjjXviJUMutBJD7sswg1ZabKLHS8kydANEAEdHzYfz3RkypPoyvckgLDb5C44NHkTT3osROBWf9fPS4+ylMsW6V3K7obkd4mINizxNS8pLIgm1jrWrSGEmqPF+/pKQo91jg75r5to50NlN4FFSIDjQXMbTQO+vijgDnpevjWg8vw329HJkjFV0QcVzz7wp7qVEVUWgvxI+JYsV0hwXLmcYU5yXPi/6BPD/XriKdX51b5el67TzQ6lnT7r2NGRtjRi8aSvdiD9VHkPXyaZuc/c=
+  file:
+    - ./build/bin/DSSHomework.zip
+  skip_cleanup: true
+  on:
+    repo: keaton-freude/dss_homework
+    tags: true
