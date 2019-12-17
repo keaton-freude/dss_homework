@@ -13,6 +13,7 @@ add_executable(DSSHomework
     thirdparty/imgui/imgui_draw.cpp
     thirdparty/imgui/imgui_widgets.cpp
     thirdparty/imgui/imgui.cpp
+    src/HTTPSClient.cpp
     src/MLBStatsFetcher.cpp
     src/Text.cpp
     src/ContentTileList.cpp
@@ -39,13 +40,6 @@ endif()
 # Our headers
 target_include_directories(DSSHomework PUBLIC include)
 
-# Add on the third-party, header-only deps
-# Wrap them in my own custom library targets to make it easier to target them in a normal CMake way
-## CPP HTTP LIB
-add_library(CppHttpLib INTERFACE)
-target_include_directories(CppHttpLib INTERFACE thirdparty/cpp-httplib)
-
-target_link_libraries(DSSHomework CppHttpLib)
 
 ## JSON
 add_library(JsonLib INTERFACE)
@@ -82,12 +76,6 @@ target_link_libraries(DSSHomework glew)
 ## STB Image
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/stb)
 
-## OpenSSL
-target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/openssl/include)
-message(${OPENSSL_ROOT_DIR})
-include(FindOpenSSL)
-target_link_libraries(DSSHomework OpenSSL::SSL OpenSSL::Crypto)
-
 ## GLText
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/gltext)
 
@@ -98,6 +86,23 @@ target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/
 ## URL 
 # Code taken from this Stack Overflow answer: https://stackoverflow.com/a/2616217
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/url)
+
+## Poco Stuff
+target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/poco/include)
+
+# Link each individual required library...
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/libcryptod.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/libssld.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoCryptod.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoFoundationd.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoJSONd.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoNetd.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoNetSSLd.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoUtild.lib)
+target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoXMLd.lib)
+
+## TODO:
+# Copy the Poco DLLs if needed
 
 ### Misc Stuff
 # Copy our resources folder into the build directory where our executable lives
