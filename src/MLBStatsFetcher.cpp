@@ -9,6 +9,11 @@
 using namespace dss;
 using json = nlohmann::json;
 
+MLBStatsFetcher::MLBStatsFetcher(std::optional<Proxy> proxyHost) 
+    :   _client(proxyHost)
+{
+}
+
 // Still not sure if we should be joining all of our threads here
 // or if we should just detach them. Issue is that if the user press <ESC>
 // before the threads have finished, it will appear to hang until the responses

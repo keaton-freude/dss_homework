@@ -3,9 +3,12 @@
 #include <list>
 #include <thread>
 #include <functional>
+#include <optional>
 #include <string>
 
 #include "HTTPSClient.h"
+#include "Proxy.h"
+
 
 namespace dss
 {
@@ -36,7 +39,7 @@ private:
 
     HTTPSClient _client;
 public:
-    MLBStatsFetcher() = default;
+    MLBStatsFetcher(std::optional<Proxy> proxyHost);
     ~MLBStatsFetcher();
 
     // Not a great way to handle dates..

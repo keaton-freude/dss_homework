@@ -14,12 +14,14 @@
 #include "Text.h"
 #include "CoordinateConverter.h"
 #include "MLBStatsFetcher.h"
+#include "Proxy.h"
 
 #include <memory>
 #include <thread>
 #include <list>
 #include <queue>
 #include <mutex>
+#include <optional>
 
 namespace dss
 {
@@ -81,7 +83,8 @@ private:
     void ProcessContentQueue();
 
 public:
-    Application();
+    // Optionally specify a proxy host to use for HTTPS requests
+    Application(std::optional<Proxy> proxy);
 
     // Starts a render loop, blocks until the application has closed for any reason
     void Run();

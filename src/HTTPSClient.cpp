@@ -20,12 +20,14 @@ using namespace Poco;
 using namespace Poco::Net;
 
 
-HTTPSClient::HTTPSClient() {
+HTTPSClient::HTTPSClient(std::optional<Proxy> proxy)
+    : _proxy(proxy)
+{
     Poco::Net::initializeSSL();
 
-   SharedPtr<InvalidCertificateHandler> ptrCert = new ConsoleCertificateHandler(false);
-   Context::Ptr ptrContext = new Context(Context::CLIENT_USE, "", "", "cacert.pem", Context::VERIFY_STRICT);
-   SSLManager::instance().initializeClient(0, ptrCert, ptrContext);
+    SharedPtr<InvalidCertificateHandler> ptrCert = new ConsoleCertificateHandler(false);
+    Context::Ptr ptrContext = new Context(Context::CLIENT_USE, "", "", "cacert.pem", Context::VERIFY_STRICT);
+    SSLManager::instance().initializeClient(0, ptrCert, ptrContext);
 }
 
 HTTPSClient::~HTTPSClient() {
@@ -37,7 +39,14 @@ std::string HTTPSClient::Get(const std::string &uriString, std::vector<std::pair
     for(const auto &queryParam : queryParams) {
         uri.addQueryParameter(queryParam.first, queryParam.second);
     }
+
     HTTPSClientSession s(uri.getHost(), uri.getPort());
+
+    if (_proxy.has_value()) {
+        std::cout << "Applying proxy settings to HTTPSClient" << std::endl;
+        s.setProxy(_proxy->proxyHost, _proxy->proxyPort);
+    }
+
     HTTPRequest request(HTTPRequest::HTTP_GET, uri.getPathAndQuery());
     s.sendRequest(request);
     HTTPResponse response;

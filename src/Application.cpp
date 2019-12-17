@@ -21,13 +21,14 @@ using namespace dss;
 
 // Currently a very opinionated default. Should expand the sort of
 // configuration which can be passed to the Application
-Application::Application() 
+Application::Application(std::optional<Proxy> proxy) 
     :   _window(std::make_shared<Window>(1920, 1080, "DSS Homework")), 
         _input(std::make_unique<Input>(_window)),
         _texturedShader(std::make_shared<ShaderProgram>(FileReadAllText(GetPathToResource("shaders/textured.vert")),
             FileReadAllText(GetPathToResource("shaders/textured.frag")))),
         _background(_window, _texturedShader),
-        _coordConverter(std::make_shared<CoordinateConverter>(_window))
+        _coordConverter(std::make_shared<CoordinateConverter>(_window)),
+        _statsFetcher(proxy)
 {
     _statsFetcher.AddObserver([this](std::string title, std::string blurb, std::vector<unsigned char>&& textureData){
         std::lock_guard<std::mutex> lock(this->_contentQueueLock);

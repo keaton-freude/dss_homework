@@ -1,7 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <optional>
 #include <string>
+
+#include "Proxy.h"
 
 namespace dss
 {
@@ -11,8 +14,9 @@ namespace dss
  */
 class HTTPSClient {
 private:
+    std::optional<Proxy> _proxy;
 public:
-    HTTPSClient();
+    HTTPSClient(std::optional<Proxy> proxy);
     ~HTTPSClient();
 
     // @uriString doesn't take into account queryParams
