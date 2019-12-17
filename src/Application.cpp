@@ -41,6 +41,8 @@ Application::Application(std::optional<Proxy> proxy)
     ImGui_ImplGlfw_InitForOpenGL(_window->GetWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
 
+    // Load ImGUI Fonts. We want two different sized fonts, using the default
+    // font-face
     ImGuiIO &io = ImGui::GetIO();
     ImFontConfig config;
     config.SizePixels = 26.f;
@@ -115,22 +117,29 @@ void Application::Run() {
             _contentList->SelectNextTile();
         }
 
-        // Draw the background
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Required ImGUI calls to keep things moving
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        // Create a full-screen, completely transparent window to house our text
         ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
         ImGui::SetNextWindowSize(ImVec2(_window->Width(), _window->Height()));
         ImGui::Begin("Hello, world!", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs);
 
+        // Draw our stuff. Background and content list
         _background.Draw(_view, _projection);
         _contentList->Draw(_view, _projection);
 
+        // Process any items which may be in the content queue
         ProcessContentQueue();
+
         ImGui::End();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        // Present frame
         _window->SwapBuffers();
 
     }

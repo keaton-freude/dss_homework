@@ -11,6 +11,7 @@
 
 #include <sstream>
 #include <utility>
+#include <iostream>
 
 #include "HTTPSClient.h"
 
