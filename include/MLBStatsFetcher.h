@@ -5,6 +5,8 @@
 #include <functional>
 #include <string>
 
+#include "HTTPSClient.h"
+
 namespace dss
 {
 
@@ -24,15 +26,15 @@ namespace dss
  */
 class MLBStatsFetcher {
 private:
-    const std::string MLB_STATS_HOST = "statsapi.mlb.com";
-
     // NOTE: We are omitting the date parameter, it will be added on when constructing
     // the entire api endpoint
     const std::string MLB_STATS_GAME_ENDPOINT_PREFIX = 
-        "/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions&sportId=1";
+        "https://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions";
 
     std::list<std::thread> _threads;
     std::list<std::function<void(std::string, std::vector<unsigned char>&&)>> _observers;
+
+    HTTPSClient _client;
 public:
     MLBStatsFetcher() = default;
     ~MLBStatsFetcher();

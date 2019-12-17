@@ -10,6 +10,7 @@
 #include "Poco/Net/HTTPResponse.h"
 
 #include <sstream>
+#include <utility>
 
 #include "HTTPSClient.h"
 
@@ -31,13 +32,15 @@ HTTPSClient::~HTTPSClient() {
     Poco::Net::uninitializeSSL();
 }
 
-std::string HTTPSClient::Get(const std::string &uriString) {
+std::string HTTPSClient::Get(const std::string &uriString, std::vector<std::pair<std::string, std::string>> queryParams) {
     URI uri(uriString);
+    for(const auto &queryParam : queryParams) {
+        uri.addQueryParameter(queryParam.first, queryParam.second);
+    }
     HTTPSClientSession s(uri.getHost(), uri.getPort());
-    HTTPRequest request(HTTPRequest::HTTP_GET, uri.getPath());
+    HTTPRequest request(HTTPRequest::HTTP_GET, uri.getPathAndQuery());
     s.sendRequest(request);
     HTTPResponse response;
-
     // Only return a body on a 200 response
     if (response.getStatus() == HTTPResponse::HTTPStatus::HTTP_OK) {
         std::istream& rs = s.receiveResponse(response);
@@ -51,4 +54,9 @@ std::string HTTPSClient::Get(const std::string &uriString) {
     std::stringstream ss;
     ss << "HTTP GET Failed. StatusCode: " << response.getStatus() << " Reason: " << response.getReason() << "\n";
     throw std::runtime_error(ss.str().c_str());
+}
+
+// Just defer to the queryParam version, with no queryParams
+std::string HTTPSClient::Get(const std::string &uriString) {
+    return Get(uriString, {});
 }

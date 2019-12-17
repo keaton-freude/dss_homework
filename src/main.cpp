@@ -1,11 +1,11 @@
 #include <iostream>
 #include <exception>
 #include "Application.h"
-
+#include "HTTPSClient.h"
 
 using namespace dss;
 
-int main() {
+int main(int argc, char** argv) {
     try {
         Application application;
         application.Run();

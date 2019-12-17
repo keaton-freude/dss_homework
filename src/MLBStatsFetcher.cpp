@@ -1,7 +1,5 @@
 #include <iostream>
 
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-#include "httplib.h"
 #include "json.hpp"
 #include "Url.h"
 
@@ -31,16 +29,17 @@ void MLBStatsFetcher::StartForDate(const std::string &date) {
     // with the data
 
     _threads.push_back(std::thread([this, date](){
-        httplib::Client client(this->MLB_STATS_HOST.c_str());
         // example date: 2018-06-10
-        const std::string endpoint = MLB_STATS_GAME_ENDPOINT_PREFIX + "&date=" + date;
-        auto res = client.Get(endpoint.c_str());
-        if (res && res->status == 200) {
-            // good to go
+        try {
+            auto res = _client.Get(MLB_STATS_GAME_ENDPOINT_PREFIX, {
+                {"sportId", "1"},
+                {"date", date}
+            });
+
             std::cout << "Got response and its good!" << std::endl;
 
             // Decode the body into a JSON object
-            auto parsed = nlohmann::json::parse(res->body);
+            auto parsed = nlohmann::json::parse(res);
             auto data = parsed.get<MLBStats>();
             std::cout << "Got " << data.totalGames << " total games of data" << std::endl;
             for(int i = 0; i < data.totalGames; ++i) {
@@ -50,38 +49,27 @@ void MLBStatsFetcher::StartForDate(const std::string &date) {
                     // Download a picture, for now just assume a 16:9 ratio.. probably use just 1280x720 as it'll look fine
                     // because it'll be pretty downscaled
                     // Take the image source and break it out into the host and endpoint
-                    auto url = Url(data.dates[0].games[i].content.editorial.recap.home.photo.cuts.at("1280x720").src);
+                    auto url = data.dates[0].games[i].content.editorial.recap.home.photo.cuts.at("1280x720").src;
 
-                    httplib::SSLClient imageClient(url.Host().c_str());
-                    
-                    httplib::Headers headers = {
-                        { "Content-Type", "application/octet-stream"}
-                    };
-
-
-                    auto imageResponse = imageClient.Get(url.Path().c_str(), headers);
-                    
-                    if (imageResponse && imageResponse->status == 200) {
+                    try {
+                        auto imageResponse = this->_client.Get(url);
+                        
                         auto &game = data.dates[0].games[i];
-                        std::vector<unsigned char> textureData(imageResponse->body.begin(), imageResponse->body.end());
+                        std::vector<unsigned char> textureData(imageResponse.begin(), imageResponse.end());
 
                         for(const auto& observer: this->_observers) {
                             observer(game.content.editorial.recap.home.headline, std::move(textureData));
                         }
-                    } else {
-                        // Probably give up here too?
-                        // TODO
-                        std::abort();
+                    } catch (std::exception &innerEx) {
+                        std::cerr << "Failed to download image data: " << innerEx.what() << std::endl;
+                        throw;
                     }
                 }));
             }
-        } else {
-            // Can't really continue if we fail to even get the stats
-            std::cerr << "Could not retrieve stats. If response was successful, status code is next line" << std::endl;
-            if (res) {
-                std::cerr << "Status Code: " << res->status << std::endl;
-            }
-            std::abort();
+        } catch (std::exception& ex) {
+            // HTTPS Request failed, best we can do is print a message and re-throw
+            std::cerr << "HTTPS Request failed. Message: " << ex.what() << std::endl;
+            throw;
         }
     }));
 }
