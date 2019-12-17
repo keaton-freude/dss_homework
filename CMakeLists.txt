@@ -1,4 +1,3 @@
-# revisit this! Find a nicer way to handle unknown CMake versions
 cmake_minimum_required(VERSION 3.12)
 
 project(DSSHomework VERSION 1.0
@@ -82,10 +81,6 @@ target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/
 ## ImGUI
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/imgui)
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/imgui/examples)
-
-## URL 
-# Code taken from this Stack Overflow answer: https://stackoverflow.com/a/2616217
-target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/url)
 
 ## Poco Stuff
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/poco/include)

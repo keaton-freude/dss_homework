@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "json.hpp"
-#include "Url.h"
 
 #include "MLBStatsFetcher.h"
 #include "MLBGameContent.h"
