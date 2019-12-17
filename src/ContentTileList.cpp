@@ -32,6 +32,11 @@ void ContentTileList::ResizeElements() {
 
     _contentTiles[0]->SetXOffset(0.0f);
 
+    // If we have only one element, we should exit now as there is nothing left to resize
+    if (_contentTiles.size() == 1) {
+        return;
+    }
+
     // Now, each element is placed directly after the previous, with our pre-determined space-between value
     for(int i = 1; i < _contentTiles.size(); ++i) {
         auto previousTransform = _contentTiles[i - 1]->GetTransform();
