@@ -32,6 +32,7 @@ struct MLBGamePhoto {
 struct MLBGameHome {
     MLBGamePhoto photo;
     std::string headline;
+    std::string blurb;
 };
 
 struct MLBGameRecap {
@@ -77,6 +78,7 @@ inline void from_json(const json &j, MLBGamePhoto &photo) {
 inline void from_json(const json &j, MLBGameHome &home) {
     j.at("photo").get_to(home.photo);
     j.at("headline").get_to(home.headline);
+    j.at("blurb").get_to(home.blurb);
 }
 
 inline void from_json(const json &j, MLBGameRecap &recap) {

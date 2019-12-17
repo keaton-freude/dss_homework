@@ -97,11 +97,12 @@ void ContentTileList::AddContentTile(std::unique_ptr<ContentTile>&& tile) {
     ResizeElements();
 }
 
-void ContentTileList::AddContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title) {
+void ContentTileList::AddContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, const std::string &blurb) {
     AddContentTile(std::make_unique<ContentTile>(
         shader,
         std::move(textureData),
         title,
+        blurb,
         _transform
     ));
 }

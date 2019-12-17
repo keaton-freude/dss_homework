@@ -30,8 +30,8 @@ namespace dss
 
 class ContentTileList {
 private:
-    // 25% larger for expanded tiles
-    const float EXPAND_SCALE_FACTOR = 1.25f;
+    // 50% larger for expanded tiles
+    const float EXPAND_SCALE_FACTOR = 1.50f;
     const float SPACE_BETWEEN_TILES = 0.02f;
 
     // How large each tile should be in unit-coords
@@ -88,7 +88,7 @@ public:
 
     // Add a content tile to the list --
     // Safe to call this method from multiple threads
-    void AddContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title);
+    void AddContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, const std::string &blurb);
 
     // Select the next tile in the list
     void SelectNextTile();

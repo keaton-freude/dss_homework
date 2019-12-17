@@ -37,6 +37,7 @@ private:
 
     // Title text
     Text _titleText;
+    Text _blurbText;
 
     // Whether this tile is selected and should show extra info & expand itself 
     bool _expanded = false;
@@ -46,10 +47,12 @@ private:
 
 public:
     // Create a ContentTile at a default location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, std::shared_ptr<Transform> parentTransform);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, 
+        const std::string &title, const std::string &blurb, std::shared_ptr<Transform> parentTransform);
 
     // Create a ContentTile at a given location
-    ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, std::shared_ptr<Transform> parentTransform, glm::vec2 position);
+    ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, 
+        const std::string &title, const std::string &blurb, std::shared_ptr<Transform> parentTransform, glm::vec2 position);
 
     virtual void Draw(const glm::mat4 &view, const glm::mat4 &projection) override;
 

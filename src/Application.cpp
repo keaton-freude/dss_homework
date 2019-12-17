@@ -29,9 +29,9 @@ Application::Application()
         _background(_window, _texturedShader),
         _coordConverter(std::make_shared<CoordinateConverter>(_window))
 {
-    _statsFetcher.AddObserver([this](std::string title, std::vector<unsigned char>&& textureData){
+    _statsFetcher.AddObserver([this](std::string title, std::string blurb, std::vector<unsigned char>&& textureData){
         std::lock_guard<std::mutex> lock(this->_contentQueueLock);
-        _contentQueue.push(ContentTileData(title, std::move(textureData)));
+        _contentQueue.push(ContentTileData(title, blurb, std::move(textureData)));
     });
 
     _statsFetcher.StartForDate("2018-06-10");
@@ -40,6 +40,19 @@ Application::Application()
     ImGui::CreateContext();
     ImGui_ImplGlfw_InitForOpenGL(_window->GetWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
+
+    ImGuiIO &io = ImGui::GetIO();
+    ImFontConfig config;
+    config.SizePixels = 26.f;
+    config.OversampleH = 5;
+    config.OversampleV = 5;
+    config.PixelSnapH = true;
+    io.Fonts->AddFontDefault(&config);
+    config.SizePixels = 18.f;
+    config.OversampleH = 5;
+    config.OversampleV = 5;
+    config.PixelSnapH = true;
+    io.Fonts->AddFontDefault(&config);
     
     _background.SetSize(_window->Width(), _window->Height());
     CalculateViewProjection();
@@ -63,7 +76,7 @@ void Application::ProcessContentQueue() {
     while (!_contentQueue.empty()) {
         auto& item = _contentQueue.front();
         std::cout << "Processing item with headline: " << item.title << std::endl;
-        _contentList->AddContentTile(_texturedShader, std::move(item.textureData), item.title);
+        _contentList->AddContentTile(_texturedShader, std::move(item.textureData), item.title, item.blurb);
 
         _contentQueue.pop();
     }
@@ -114,11 +127,11 @@ void Application::Run() {
         _background.Draw(_view, _projection);
         _contentList->Draw(_view, _projection);
 
+        ProcessContentQueue();
         ImGui::End();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         _window->SwapBuffers();
 
-        ProcessContentQueue();
     }
 }

@@ -58,7 +58,10 @@ void MLBStatsFetcher::StartForDate(const std::string &date) {
                         std::vector<unsigned char> textureData(imageResponse.begin(), imageResponse.end());
 
                         for(const auto& observer: this->_observers) {
-                            observer(game.content.editorial.recap.home.headline, std::move(textureData));
+                            observer(
+                                game.content.editorial.recap.home.headline,
+                                game.content.editorial.recap.home.blurb,
+                                std::move(textureData));
                         }
                     } catch (std::exception &innerEx) {
                         std::cerr << "Failed to download image data: " << innerEx.what() << std::endl;
@@ -74,6 +77,6 @@ void MLBStatsFetcher::StartForDate(const std::string &date) {
     }));
 }
 
-void MLBStatsFetcher::AddObserver(std::function<void(std::string, std::vector<unsigned char>&&)> observer) {
+void MLBStatsFetcher::AddObserver(std::function<void(std::string, std::string, std::vector<unsigned char>&&)> observer) {
     _observers.push_back(observer);
 }

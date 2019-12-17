@@ -4,19 +4,27 @@
 
 using namespace dss;
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, std::shared_ptr<Transform> parentTransform)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, 
+    const std::string &title, const std::string &blurb, std::shared_ptr<Transform> parentTransform)
 :   TexturedDrawable(&QuadMesh(), std::move(textureData), shader),
     _transform(),
     _parentTransform(parentTransform),
-    _titleText(title, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f), _parentTransform)
+    _titleText(title, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f), 
+        _parentTransform, &_transform, Text::TextPositioning::ABOVE, ImGui::GetIO().Fonts->Fonts[0]),
+    _blurbText(blurb, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f), 
+        _parentTransform, &_transform, Text::TextPositioning::BELOW, ImGui::GetIO().Fonts->Fonts[1])
 {
 }
 
-ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, const std::string &title, std::shared_ptr<Transform> parentTransform, glm::vec2 position)
+ContentTile::ContentTile(std::shared_ptr<ShaderProgram> shader, std::vector<unsigned char> &&textureData, 
+    const std::string &title, const std::string &blurb, std::shared_ptr<Transform> parentTransform, glm::vec2 position)
 :   TexturedDrawable(&QuadMesh(), std::move(textureData), shader),
     _transform(glm::vec3(position.x, position.y, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)),
     _parentTransform(parentTransform),
-    _titleText(title, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f), _parentTransform)
+    _titleText(title, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f), 
+        _parentTransform, &_transform, Text::TextPositioning::ABOVE, ImGui::GetIO().Fonts->Fonts[0]),
+    _blurbText(blurb, glm::vec2(_transform.translation.x, _transform.translation.y - 100.0f), 
+        _parentTransform, &_transform, Text::TextPositioning::BELOW, ImGui::GetIO().Fonts->Fonts[1])
 {
 }
 
@@ -30,6 +38,7 @@ void ContentTile::Draw(const glm::mat4 &view, const glm::mat4 &projection) {
 
     if (_expanded) {
         _titleText.Draw();
+        _blurbText.Draw();
     }
 }
 
@@ -68,4 +77,5 @@ void ContentTile::SetParentTransform(std::shared_ptr<Transform> transform) {
 
 void ContentTile::UpdateTextPosition() {
     _titleText.SetPosition(glm::vec2(_transform.translation.x, -_transform.scale.y));
+    _blurbText.SetPosition(glm::vec2(_transform.translation.x, -_transform.scale.y));
 }

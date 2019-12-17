@@ -32,7 +32,7 @@ private:
         "https://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions";
 
     std::list<std::thread> _threads;
-    std::list<std::function<void(std::string, std::vector<unsigned char>&&)>> _observers;
+    std::list<std::function<void(std::string, std::string, std::vector<unsigned char>&&)>> _observers;
 
     HTTPSClient _client;
 public:
@@ -42,7 +42,7 @@ public:
     // Not a great way to handle dates..
     void StartForDate(const std::string &date);
 
-    void AddObserver(std::function<void(std::string, std::vector<unsigned char>&&)> observer);
+    void AddObserver(std::function<void(std::string, std::string, std::vector<unsigned char>&&)> observer);
 };
 
 }
