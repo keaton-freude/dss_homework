@@ -22,6 +22,8 @@ Below instructions are for building via CLI. CMake GUI will work as well, but ca
     - Match the `BUILD_TYPE` from above. Pick either `Debug` or `Release`
 5. If successful, the build artifacts (including necessary resources, and DLLs) are present at: `${REPO_ROOT}/build/bin/<BUILD_TYPE>`
 
+If there are any issues or confusion, take a look at `build.bat` in the repo root. Travis CI runs this build script to generate artifacts.
+
 ### Tested Configurations:
 Windows 10 RS5 (17763.864) with Visual Studio 2017, CMake 3.16.1, Release Build
 
