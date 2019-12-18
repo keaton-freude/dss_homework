@@ -15,15 +15,17 @@ Below instructions are for building via CLI. CMake GUI will work as well, but ca
 1. Clone the repository to your local disk, this path is `${REPO_ROOT}`
 2. Open a terminal (`cmd.exe`, `powershell`, `git bash`) and change into `${REPO_ROOT}/build`
     - NOTE: If for some reason the build folder is not present, just create it
-3. Run CMake to generate project files: `cmake -G "Visual Studio 15 2017" ..`
+3. Run CMake to generate project files: `cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=<BUILD_TYPE> ..`
+    - NOTE: Supported `BUILD_TYPE` are: `DEBUG` or `RELEASE`. If you want to build one, then the other, make sure to re-generate the build files
     - NOTE: If doing this multiple times, make sure build folder is cleared out before running this step
-4. Build the project: `cmake --build .`
-5. If successful, the build artifacts (including necessary resources, and DLLs) are present at: `${REPO_ROOT}/build/bin/Debug`
+4. Build the project: `cmake --build . --config <BUILD_TYPE>`
+    - Match the `BUILD_TYPE` from above. Pick either `Debug` or `Release`
+5. If successful, the build artifacts (including necessary resources, and DLLs) are present at: `${REPO_ROOT}/build/bin/<BUILD_TYPE>`
 
 ### Tested Configurations:
-Windows 10 RS5 (17763.864) with Visual Studio 2017, CMake 3.16.1
+Windows 10 RS5 (17763.864) with Visual Studio 2017, CMake 3.16.1, Release Build
 
-CI Environment: Windows Server 1803 with Visual Studio 2017, CMake 3.12.3
+CI Environment: Windows Server 1803 with Visual Studio 2017, CMake 3.12.3, Release Build
 
 # Run
 Two important things to be aware of:

@@ -85,20 +85,41 @@ target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/
 ## Poco Stuff
 target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/poco/include)
 
-# Link each individual required library...
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/libcryptod.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/libssld.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoCryptod.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoFoundationd.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoJSONd.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoNetd.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoNetSSLd.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoUtild.lib)
-target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/lib/PocoXMLd.lib)
+# Add the correct directory for release vs debug for poco libs
+string( TOLOWER ${CMAKE_BUILD_TYPE} build_type_lower)
+if(${build_type_lower} STREQUAL "release")
+    # Link each individual required library...
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/libcrypto.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/libssl.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoCrypto.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoFoundation.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoJSON.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoNet.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoNetSSL.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoUtil.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/release/lib/PocoXML.lib)
 
-file(GLOB POCO_RUNTIME_LIBRARIES
-    ${CMAKE_CURRENT_LIST_DIR}/thirdparty/poco/bin/*.dll
-)
+    file(GLOB POCO_RUNTIME_LIBRARIES
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/poco/release/bin/*.dll
+    )
+else()
+    # Link each individual required library...
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/libcryptod.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/libssld.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoCryptod.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoFoundationd.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoJSONd.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoNetd.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoNetSSLd.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoUtild.lib)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/poco/debug/lib/PocoXMLd.lib)
+
+    file(GLOB POCO_RUNTIME_LIBRARIES
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/poco/debug/bin/*.dll
+    )
+endif()
+
+
 
 # Copy all required resources (graphics resources, certs, poco runtime DLLs) next to the binary
 add_custom_command(TARGET DSSHomework POST_BUILD
