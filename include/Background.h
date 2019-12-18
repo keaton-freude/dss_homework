@@ -1,14 +1,11 @@
 #pragma once
 
-#include "IndexBuffer.h"
-#include "VertexBuffer.h"
+#include <memory>
+
 #include "Window.h"
 #include "Transform.h"
-#include "Texture.h"
-#include "ShaderProgram.h"
 #include "glm/mat4x4.hpp"
 #include "TexturedDrawable.h"
-#include <memory>
 
 namespace dss
 {
@@ -31,6 +28,7 @@ public:
 
     virtual void Draw(const glm::mat4 &view, const glm::mat4 &projection) override;
 
+    // This needs to be called when the size of the window content area changes
     void SetSize(uint32_t width, uint32_t height);
 };
 

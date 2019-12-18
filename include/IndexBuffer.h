@@ -23,8 +23,6 @@ namespace dss
  *      -   Not keeping a copy of the index data. This might be useful in some
  *          contexts, especially Dynamic index data. But specifically not doing it here
  *          as it will not be needed and save a few bytes
- *        
- *
  */
 class IndexBuffer {
 private:

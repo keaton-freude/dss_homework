@@ -23,15 +23,12 @@ namespace dss
  *  per IO request. We expect to spend the vast majority of time
  *  waiting for IO to finish
  * 
- *  NOTE: Would be nice to have a thread-pool available, instead we'll
- *  just have to manage with creating threads, storing them and eventually
- *  joining at the end
  */
 class MLBStatsFetcher {
 private:
     // NOTE: We are omitting the date parameter, it will be added on when constructing
     // the entire api endpoint
-    const std::string MLB_STATS_GAME_ENDPOINT_PREFIX = 
+    const std::string MLB_STATS_URI = 
         "https://statsapi.mlb.com/api/v1/schedule?hydrate=game(content(editorial(recap))),decisions";
 
     std::list<std::thread> _threads;

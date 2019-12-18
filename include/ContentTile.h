@@ -6,11 +6,6 @@
 #include "glm/vec3.hpp"
 #include "glm/mat4x4.hpp"
 
-#include "ShaderProgram.h"
-#include "IndexBuffer.h"
-#include "VertexBuffer.h"
-#include "VertexFormat.h"
-#include "Texture.h"
 #include "TexturedDrawable.h"
 #include "Transform.h"
 #include "Text.h"

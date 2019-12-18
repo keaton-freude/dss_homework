@@ -10,12 +10,8 @@ using namespace dss;
  */
 const std::unordered_map<Input::Keys, int> Input::_KEY_SCAN_CODE_MAPPING = {
     {Input::Keys::Escape, GLFW_KEY_ESCAPE},
-    {Input::Keys::L, GLFW_KEY_L},
-    {Input::Keys::H, GLFW_KEY_H},
     {Input::Keys::Left, GLFW_KEY_LEFT},
     {Input::Keys::Right, GLFW_KEY_RIGHT},
-    {Input::Keys::A, GLFW_KEY_A},
-    {Input::Keys::D, GLFW_KEY_D}
 };
 
 Input::Input(std::shared_ptr<Window> window) : _window(window) {

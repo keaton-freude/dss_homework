@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Window.h"
-
 #include <unordered_map>
 #include <memory>
+
+#include "Window.h"
 
 namespace dss
 {
@@ -23,15 +23,9 @@ public:
     // The keys we are tracking
     enum class Keys {
         Escape,
-        // left-right in vim keybindings
-        L,
-        H,
         // left-right arrows
         Left,
-        Right,
-        // left-right in WASD scheme
-        A,
-        D
+        Right
     };
     
 private:
@@ -43,8 +37,10 @@ private:
     // Allows us to bridge GLFW state with our own internal state
     const static std::unordered_map<Keys, int> _KEY_SCAN_CODE_MAPPING;
 
+    // The window we will receive state callbacks from
     std::shared_ptr<Window> _window;
 
+    // Function GLFW will hit with keyboard updates
     static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
     void HandleKeyCallback(int key, int scancode, int action, int mods);
 

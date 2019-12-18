@@ -84,10 +84,6 @@ void Application::ProcessContentQueue() {
     }
 }
 
-void DoFetchTileDetails(std::string date) {
-
-}
-
 void Application::CalculateViewProjection() {
     // Arbitrary Near & Far
     static const float NEAR = -100.0f;

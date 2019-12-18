@@ -10,6 +10,9 @@ using json = nlohmann::json;
 /**
  *  Provides a type definition for the MLB Game Content available through the
  *  MLB Stats API 
+ * 
+ *  We also provide conversion functions from string data into JSON structures for
+ *  use with nlohmann::json library
  */
 
 namespace dss
@@ -61,7 +64,6 @@ struct MLBStats {
 };
 
 // The order of the from_json functions _matters_
-// Why?? ADL??
 // Order from most-nested to least (matching structs above)
 
 inline void from_json(const json &j, MLBGamePhotoCut &cut) {

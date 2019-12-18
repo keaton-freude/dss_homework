@@ -20,7 +20,6 @@ struct Transform {
     glm::vec3 rotation;
     glm::vec3 scale;
 
-    // NOTE: It seems that GLM doesn't default-initialize vec3 to sane values...
     Transform() {
         translation = glm::vec3(0.0f, 0.0f, 0.0f);
         rotation = glm::vec3(1.0f, 1.0f, 1.0f);

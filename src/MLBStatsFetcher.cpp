@@ -35,7 +35,7 @@ void MLBStatsFetcher::StartForDate(const std::string &date) {
     _threads.push_back(std::thread([this, date](){
         // example date: 2018-06-10
         try {
-            auto res = _client.Get(MLB_STATS_GAME_ENDPOINT_PREFIX, {
+            auto res = _client.Get(MLB_STATS_URI, {
                 {"sportId", "1"},
                 {"date", date}
             });
