@@ -37,6 +37,11 @@ Two important things to be aware of:
 2. If you are behind a proxy, you must set your proxy details when launching the application (either on the CLI, or through Windows). CLI Example: `./DSSHomework.exe example-proxy.com 80`
     - NOTE: Notice the proxy host is separate from the proxy port. Do not include the protocol (`http` or `https`)
 
+# Releases
+Releases are automatically created by pushing a tagged commit to the repo. Travis CI will pick these commits up, create a build, package and deploy it to the repos Releases page: https://github.com/keaton-freude/dss_homework/releases
+
+The details in the above `Run` section are still relevant for these releases
+
 # Details
 Once the application is running, the window should have a background drawn across the entire content area. At this point, we've kicked off a background thread which will query the MLB Stats API for game data for the date: `2018-06-10`. Once the data has been retrieved and parsed into a JSON object, we kick off a thread which downloads one image per gate.
 
