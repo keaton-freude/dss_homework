@@ -45,7 +45,8 @@ protected:
         _shader->SetShaderUniform("View", view);
         _shader->SetShaderUniform("Projection", projection);
 
-        glDrawElements(GL_TRIANGLES, _indexBuffer.GetNumFaces() * 3, GL_UNSIGNED_INT, 0);
+        // Cast to int, because OpenGL requires an int
+        glDrawElements(GL_TRIANGLES, static_cast<int>(_indexBuffer.GetNumFaces() * 3), GL_UNSIGNED_INT, 0);
 
     }
 

@@ -89,7 +89,10 @@ void DoFetchTileDetails(std::string date) {
 }
 
 void Application::CalculateViewProjection() {
-    _projection = glm::ortho(0.f, static_cast<float>(_window->Width()), 0.f, static_cast<float>(_window->Height()), -100.f, 100.f);
+    // Arbitrary Near & Far
+    static const float NEAR = -100.0f;
+    static const float FAR = 100.0f;
+    _projection = glm::ortho(0.f, static_cast<float>(_window->Width()), 0.f, static_cast<float>(_window->Height()), NEAR, FAR);
     _view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 }
 
@@ -125,7 +128,7 @@ void Application::Run() {
         ImGui::NewFrame();
         // Create a full-screen, completely transparent window to house our text
         ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
-        ImGui::SetNextWindowSize(ImVec2(_window->Width(), _window->Height()));
+        ImGui::SetNextWindowSize(ImVec2(static_cast<float>(_window->Width()), static_cast<float>(_window->Height())));
         ImGui::Begin("Hello, world!", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs);
 
         // Draw our stuff. Background and content list

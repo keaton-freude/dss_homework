@@ -22,11 +22,12 @@ void ContentTileList::ResizeElements() {
     // Find the expanded element and make sure its size is correct
     for(const auto& contentTile : _contentTiles) {
         if (contentTile->IsExpanded()) {
-            contentTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR), 
-                _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR));
+            contentTile->Resize(static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR)), 
+                static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR)));
         } else {
             // For other tiles, resize them based on the current screen dimensions
-            contentTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE), _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE));
+            contentTile->Resize(static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE)), 
+                static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceHeight(TILE_SCALE)));
         }
     }
 
@@ -117,10 +118,11 @@ void ContentTileList::ExpandTile(size_t last, size_t current) {
     auto &currentTile = _contentTiles[current];
 
     lastTile->SetExpand(false);
-    lastTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE), _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE));
+    lastTile->Resize(static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE)), 
+        static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceHeight(TILE_SCALE)));
     currentTile->SetExpand(true);
-    currentTile->Resize(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR), 
-        _coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR));
+    currentTile->Resize(static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceWidth(TILE_SCALE * EXPAND_SCALE_FACTOR)), 
+        static_cast<uint32_t>(_coordConverter->UnitToScreenSpaceHeight(TILE_SCALE * EXPAND_SCALE_FACTOR)));
 }
 
 void ContentTileList::SelectNextTile() {

@@ -46,7 +46,7 @@ void MLBStatsFetcher::StartForDate(const std::string &date) {
             auto parsed = nlohmann::json::parse(res);
             auto data = parsed.get<MLBStats>();
             std::cout << "Got " << data.totalGames << " total games of data" << std::endl;
-            for(int i = 0; i < data.totalGames; ++i) {
+            for(uint32_t i = 0; i < data.totalGames; ++i) {
 
                 // Create a thread to handle downloading images and alerting observers
                 this->_threads.push_back(std::thread([this, data, i]() {

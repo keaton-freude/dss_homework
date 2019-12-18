@@ -27,7 +27,7 @@ Texture::Texture(const std::string &textureName) {
 
 Texture::Texture(std::vector<unsigned char> &&textureData) {
     int x, y, n;
-    unsigned char *data = stbi_load_from_memory(&textureData.front(), textureData.size(), &x, &y, &n, 0);
+    unsigned char *data = stbi_load_from_memory(&textureData.front(), static_cast<int>(textureData.size()), &x, &y, &n, 0);
     
     if (!data) {
         std::cerr << "Failed to load image!" << std::endl;
