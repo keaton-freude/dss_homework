@@ -45,9 +45,15 @@ As the image data comes in, we pass it and other info (headline, blurb) to all r
 There is an observer of this data registered in the Application startup which will take this data and insert it into a work-queue which is then processed on the main thread.
 
 ### Aside: Why process on the main thread?
-    I realized a little too late into the process that only the thread associated with the registered OpenGL context could create OpenGL resources for use with the main context. If I were to refactor this, I would probably do:
+    I realized a little too late into the process that only the thread associated
+    with the registered OpenGL context could create OpenGL resources for use with
+    the main context. If I were to refactor this, I would probably do:
 
-    Create a thread which creates its own OpenGL context, shared with the main-context. This thread would manage the creation of the `ContentTile`s, then only do a _move_ of the `ContentTile` into the `ContentTileList`. This means we'd only lock up the Render thread on a single move of an already-constructed `ContentTile` into the `ContentTileList`
+    Create a thread which creates its own OpenGL context, shared with the main-context.
+    This thread would manage the creation of the `ContentTile`s, then only do a
+    _move_ of the `ContentTile` into the `ContentTileList`. This means we'd only
+    lock up the Render thread on a single move of an already-constructed `ContentTile`
+    into the `ContentTileList`
 
 The main thread will pull items off the work-queue and insert them into the `ContentTileList`. Each time items are added to the `ContentTileList`, or a new `ContentTile` is selected, we will re-calculate the positioning of each item in the `ContentTileList`.
 
