@@ -4,9 +4,8 @@
 
 using namespace dss;
 
-Background::Background(std::shared_ptr<Window> window, std::shared_ptr<ShaderProgram> shader) 
-    :   TexturedDrawable(&QuadMesh(), "textures/background.jpg", shader),
-        _window(window)
+Background::Background(std::shared_ptr<ShaderProgram> shader) 
+    :   TexturedDrawable(&QuadMesh(), "textures/background.jpg", shader)
 {
     _transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 }

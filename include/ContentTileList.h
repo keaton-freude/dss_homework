@@ -54,7 +54,6 @@ private:
     std::shared_ptr<CoordinateConverter> _coordConverter;
 
     // Which tile in our vector is selected
-    // TODO Replace with iterator?
     size_t _selectedTileIndex = 0;
 
     // This method will add a tile, to the contentTiles list

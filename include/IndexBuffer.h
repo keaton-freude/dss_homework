@@ -19,7 +19,6 @@ namespace dss
  *  which includes providing an easy way to create an Index buffer
  *  for a given Mesh.
  * 
- *  TODO: CHECK BELOW
  *  Design Considerations:
  *      -   Not keeping a copy of the index data. This might be useful in some
  *          contexts, especially Dynamic index data. But specifically not doing it here
@@ -35,7 +34,6 @@ private:
     // How many faces does this Index Buffer represent
     size_t _numFaces;
 public:
-    // TODO: REVIEW THIS
     // Want to enforce a pre-condition of this class, which is we immediately wrap
     // data and do not allow an IndexBuffer in an invalid/unwanted state
     IndexBuffer() = delete;

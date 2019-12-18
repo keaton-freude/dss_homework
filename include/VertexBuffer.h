@@ -8,8 +8,12 @@ namespace dss
 {
 
 /**
- *  Wraps an OpenGL Vertex Buffer
- *  TODO: ADD DOCS?
+ *  Wraps an OpenGL Vertex Buffer.
+ * 
+ *  Takes an IMesh which provides an accessor to the vertex data
+ *  along with how much data there is
+ * 
+ *  Provides a Bind function to bind it to the pipeline
  */
 class VertexBuffer {
 private:

@@ -41,9 +41,9 @@ protected:
         VertexLayoutTy::SetVertexAttribPointers();
         _shader->Bind();
 
-        _shader->SetShaderUniform("Model", transform.GetModelMatrix());
-        _shader->SetShaderUniform("View", view);
-        _shader->SetShaderUniform("Projection", projection);
+        _shader->SetShaderUniformMat4("Model", transform.GetModelMatrix());
+        _shader->SetShaderUniformMat4("View", view);
+        _shader->SetShaderUniformMat4("Projection", projection);
 
         // Cast to int, because OpenGL requires an int
         glDrawElements(GL_TRIANGLES, static_cast<int>(_indexBuffer.GetNumFaces() * 3), GL_UNSIGNED_INT, 0);

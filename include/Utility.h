@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 /**
  *  Small helper utilities 
@@ -24,25 +25,12 @@ static inline std::string FileReadAllText(std::filesystem::path path) {
         std::ifstream fs(path);
         return std::string(std::istreambuf_iterator<char>(fs), std::istreambuf_iterator<char>());
     } catch ([[maybe_unused]] const std::ifstream::failure& exception) {
-        // TODO: Check that this exception works..
-        // TODO: Revisit the maybe_unused piece!
         std::cerr << "Failed to open file, though it exists: " << path.filename().string() << std::endl;
-        // TODO: re-throw?
-        throw std::runtime_error("Failed to open file.");
+        std::stringstream exMessage;
+        exMessage << "Failed to open file: " << path << "\nMessage: " << exception.what();
+        throw std::runtime_error(exMessage.str().c_str());
     }
 }
-
-/*static inline std::vector<std::byte> FileReadAllBytes(std::filesystem::path path) {
-    if (!std::filesystem::exists(path)) {
-        std::cerr << "File not found: " << std::filesystem::absolute(path).string() << std::endl;
-        throw std::runtime_error("File not found");
-    }
-
-    try {
-        std::ifstream fs(path, std::ios_base::binary);
-        return std::vector<std::byte>(std::istreambuf_iterator<std::byte>(fs), std::istream_iterator<std::byte>());
-    }
-}*/
 
 static inline std::string GetResourcesRoot() {
     // Returns the path to the resources folder by making some guesses

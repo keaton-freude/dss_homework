@@ -35,13 +35,10 @@ namespace dss
  *  for abstraction and breaking components out. But we'll start with a lot of stuff being
  *  in here and things will be extracted/modularized as it becomes more apparent
  * 
- *  A key requirement here is we should, ideally, see _no_ GLFW or OpenGL stuff. We should
- *  work over top of our own abstractions. Given time, I'd extend that over the HTTP library
- *  and the JSON library.
+ *  Ideally, see _no_ GLFW or OpenGL stuff. We should work over top of our own abstractions.
  * 
- *  TODO: Re-evaluate above
- * 
- *  NOTE: Things I'd normally split out: RenderLoop abstraction <TODO> add more 
+ *  NOTE: Normally I'd abstract out the RenderLoop implementation per-windowing framework/graphics
+ *  API
  */
 class Application {
 private:

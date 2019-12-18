@@ -34,7 +34,6 @@ struct Transform {
 
     inline glm::mat4 GetModelMatrix() const {
         // Translate -> Rotate -> Scale (happens in reverse order)
-        // NOTE: Below tends to be very expensive, see if thats the case and optimize TODO
         return glm::translate(translation) * glm::rotate(0.0f, rotation) * glm::scale(scale);
     }
 };

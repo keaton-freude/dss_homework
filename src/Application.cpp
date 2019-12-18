@@ -25,7 +25,7 @@ Application::Application(std::optional<Proxy> proxy)
         _input(std::make_unique<Input>(_window)),
         _texturedShader(std::make_shared<ShaderProgram>(FileReadAllText(GetPathToResource("shaders/textured.vert")),
             FileReadAllText(GetPathToResource("shaders/textured.frag")))),
-        _background(_window, _texturedShader),
+        _background(_texturedShader),
         _coordConverter(std::make_shared<CoordinateConverter>(_window)),
         _statsFetcher(proxy)
 {

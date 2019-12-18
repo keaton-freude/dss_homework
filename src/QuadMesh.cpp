@@ -24,7 +24,7 @@ QuadMesh::QuadMesh()
 }
 
 const size_t QuadMesh::GetNumVertexBytes() const {
-    return _vertices.size() * PositionColor::SizeInBytes();
+    return _vertices.size() * PositionUV::SizeInBytes();
 }
 
 void *QuadMesh::GetVertexData() const {

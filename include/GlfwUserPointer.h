@@ -12,7 +12,7 @@ namespace dss
  *  needed by various components to handle GLFW callbacks 
  */
 struct GlfwUserPointer {
-    // TODO: Raw pointer okay here?
+    // Non-owning Raw pointers
     Input *input;
     Window *window;
 };
