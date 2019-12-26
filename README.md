@@ -65,3 +65,10 @@ The main thread will pull items off the work-queue and insert them into the `Con
 NOTE: The layout management of the `ContentTile`s was a huge pain. If I were to refactor this, I'd create a simple layout-management system (something like Qt's `QHBoxLayout` or similar)
 
 Each frame we process input, poke `ImGUI` to keep it moving, render our components and check if any items are available to be processed in the work queue
+
+# Extras Branch
+This branch contains refactorings, extra-credit type stuff and other things I wanted to work on. All of this work came _after_ the submission and is just for fun
+
+## Layout System
+Adding a layout system, so we can encapsulate and isolate the layout logic into its own set of classes. This lets us pull that layout logic out of the `ContentTileList`, which makes it more reusable and cleaner and ultimately more powerful.
+
