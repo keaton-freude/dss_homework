@@ -53,6 +53,11 @@ void ContentTileList::ResizeElements() {
 
 // Check two scenarios: selected tile is out of view to the left and selected tile is out of view to the right
 void ContentTileList::BringSelectedTileIntoView() {
+	// If we have no elements we can just exit early. This happens when we resize the window
+	// while tiles are loading
+	if (_contentTiles.size() == 0) {
+		return;
+	}
     // Handle the case where the selected tile is past the edge of the right side of the window
     const auto &expandedTile = _contentTiles[_selectedTileIndex];
 
