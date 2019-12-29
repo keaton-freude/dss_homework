@@ -1,3 +1,7 @@
+// Only include visual leak detector if we are in debug mode
+#ifdef _DEBUG
+#include <vld.h>
+#endif
 #include <iostream>
 #include <exception>
 #include "Application.h"
@@ -36,4 +40,6 @@ int main(int argc, char** argv) {
     } catch (std::exception& exception) {
         std::cerr << "Caught unhandled exception in main: " << exception.what() << std::endl;
     }
+
+    return 0;
 }

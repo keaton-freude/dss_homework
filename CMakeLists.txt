@@ -119,6 +119,11 @@ else()
     )
 endif()
 
+## Visual Leak Detector, only used in Debug builds to do memory leak detection at runtime
+if(${build_type_lower} STREQUAL "debug")
+    target_include_directories(DSSHomework PRIVATE ${PROJECT_SOURCE_DIR}/thirdparty/vld/include)
+    target_link_libraries(DSSHomework ${PROJECT_SOURCE_DIR}/thirdparty/vld/lib/Win64/vld.lib)
+endif()
 
 
 # Copy all required resources (graphics resources, certs, poco runtime DLLs) next to the binary
@@ -129,6 +134,8 @@ add_custom_command(TARGET DSSHomework POST_BUILD
     ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:DSSHomework>/resources
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_SOURCE_DIR}/thirdparty/openssl/cacert.pem $<TARGET_FILE_DIR:DSSHomework>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/thirdparty/vld/bin/Win64/vld_x64.dll $<TARGET_FILE_DIR:DSSHomework>
     )
 
 set_target_properties(DSSHomework PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/bin/)
