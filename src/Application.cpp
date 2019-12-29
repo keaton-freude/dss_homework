@@ -44,17 +44,8 @@ Application::Application(std::optional<Proxy> proxy)
     // Load ImGUI Fonts. We want two different sized fonts, using the default
     // font-face
     ImGuiIO &io = ImGui::GetIO();
-    ImFontConfig config;
-    config.SizePixels = 26.f;
-    config.OversampleH = 5;
-    config.OversampleV = 5;
-    config.PixelSnapH = true;
-    io.Fonts->AddFontDefault(&config);
-    config.SizePixels = 18.f;
-    config.OversampleH = 5;
-    config.OversampleV = 5;
-    config.PixelSnapH = true;
-    io.Fonts->AddFontDefault(&config);
+    io.Fonts->AddFontFromFileTTF(GetPathToResource("fonts/roboto-regular.ttf").string().c_str(), 28.f);
+    io.Fonts->AddFontFromFileTTF(GetPathToResource("fonts/roboto-regular.ttf").string().c_str(), 16.f);
     
     _background.SetSize(_window->Width(), _window->Height());
     CalculateViewProjection();
@@ -67,6 +58,13 @@ Application::Application(std::optional<Proxy> proxy)
         this->CalculateViewProjection();
         this->_contentList->RespondToResize();
     });
+}
+
+Application::~Application() {
+	// cleanup ImGui
+	ImGui_ImplGlfw_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void Application::ProcessContentQueue() {
@@ -86,9 +84,9 @@ void Application::ProcessContentQueue() {
 
 void Application::CalculateViewProjection() {
     // Arbitrary Near & Far
-    static const float NEAR = -100.0f;
-    static const float FAR = 100.0f;
-    _projection = glm::ortho(0.f, static_cast<float>(_window->Width()), 0.f, static_cast<float>(_window->Height()), NEAR, FAR);
+    static const float NEAR_DISTANCE = -100.0f;
+    static const float FAR_DISTANCE = 100.0f;
+    _projection = glm::ortho(0.f, static_cast<float>(_window->Width()), 0.f, static_cast<float>(_window->Height()), NEAR_DISTANCE, FAR_DISTANCE);
     _view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 }
 

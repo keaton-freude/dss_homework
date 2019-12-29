@@ -82,6 +82,7 @@ private:
 public:
     // Optionally specify a proxy host to use for HTTPS requests
     Application(std::optional<Proxy> proxy);
+	~Application();
 
     // Starts a render loop, blocks until the application has closed for any reason
     void Run();
