@@ -15,6 +15,7 @@ struct GLFWwindow;
 
 namespace dss
 {
+struct GlfwUserPointer;
 
 // Wrap up a GLFWwindow. In a larger application where you might to support various windowing frameworks
 // we'd abstract this concept out.
@@ -26,6 +27,8 @@ private:
     // nor are we meant to do anything with it when we wish to stop using it. GLFW owns this pointer
     // we just have a view of it
     GLFWwindow *_window;
+    // GLFW will hold onto the raw pointer and we'll delete it when the Window goes out of scope
+    std::unique_ptr<GlfwUserPointer> _userPointer;
 
     uint16_t _width;
     uint16_t _height;

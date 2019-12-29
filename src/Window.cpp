@@ -1,14 +1,17 @@
-#include "Window.h"
-#include "GlfwUserPointer.h"
+#include <iostream>
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <iostream>
+#include "Window.h"
+#include "GlfwUserPointer.h"
 
 using namespace dss;
 
 Window::Window(uint16_t width, uint16_t height, const std::string &name)
-    : _width(width), _height(height)  {
+    :   _userPointer(std::make_unique<GlfwUserPointer>()), 
+        _width(width),
+        _height(height)
+{
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW! Giving up..." << std::endl;
@@ -25,9 +28,8 @@ Window::Window(uint16_t width, uint16_t height, const std::string &name)
 
     // GLFW lets us store a pointer to any object, 'GlfwUserPointer' will wrap up
     // the required pointers
-    auto glfwUserPointer = new GlfwUserPointer();
-    glfwUserPointer->window = this;
-    glfwSetWindowUserPointer(_window, glfwUserPointer);
+    _userPointer->window = this;
+    glfwSetWindowUserPointer(_window, _userPointer.get());
 
     glfwSetWindowSizeCallback(_window, [](GLFWwindow *window, int width, int height){
         void *userPointer = glfwGetWindowUserPointer(window);

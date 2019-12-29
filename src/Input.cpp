@@ -1,6 +1,5 @@
 #include "Input.h"
 #include "GlfwUserPointer.h"
-
 #include <GLFW/glfw3.h>
 
 using namespace dss;
