@@ -66,9 +66,24 @@ NOTE: The layout management of the `ContentTile`s was a huge pain. If I were to 
 
 Each frame we process input, poke `ImGUI` to keep it moving, render our components and check if any items are available to be processed in the work queue
 
-# Extras Branch
-This branch contains refactorings, extra-credit type stuff and other things I wanted to work on. All of this work came _after_ the submission and is just for fun
+# EXTRAS
+Below is stuff that was added/changed/fixed since the submission date.
 
-## Layout System
-Adding a layout system, so we can encapsulate and isolate the layout logic into its own set of classes. This lets us pull that layout logic out of the `ContentTileList`, which makes it more reusable and cleaner and ultimately more powerful.
+## Memory Leaks
+Forgot to add memory leak detection, integrated Visual Leak Detector into the project and found two issues that were fixed:
+1) Not cleaning up ImGUI when the application exits, which resulted in a lot of leaked memory
+2) Not cleaning up the GlfwUserPointer associated with the GlfwWindow instance
 
+NOTE: Memory leak detection is only turned on when Debug configuration is used (both in the CMake generation and build) and will automatically output the memory leak information to stdout.
+
+### Poco False Positives?
+I think Visual Leak Detector is having issues with tracking the ownership of the Poco SSL constructs (`HTTPSClient.cpp:29-31`):
+```
+    SharedPtr<InvalidCertificateHandler> ptrCert = new ConsoleCertificateHandler(false);
+    Context::Ptr ptrContext = new Context(Context::CLIENT_USE, "", "", "cacert.pem", Context::VERIFY_STRICT);
+    SSLManager::instance().initializeClient(0, ptrCert, ptrContext);
+```
+
+This is how the Poco docs describe using these constructs, and being a SharedPtr (which seems to mimic `std::shared_ptr<T>`) the code looks correct. Everything should be torn down in the Destructor of `HTTPSClient` when we uninitialize the SSL object.
+
+All of that said: VLD is still reporting 3 memory leaks related to the code above. Either I am misunderstanding resource management in Poco, or this is a false positive (perhaps their own new & delete implementations that VLD can't see?).
