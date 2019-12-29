@@ -136,6 +136,10 @@ add_custom_command(TARGET DSSHomework POST_BUILD
     ${CMAKE_SOURCE_DIR}/thirdparty/openssl/cacert.pem $<TARGET_FILE_DIR:DSSHomework>
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_SOURCE_DIR}/thirdparty/vld/bin/Win64/vld_x64.dll $<TARGET_FILE_DIR:DSSHomework>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/thirdparty/vld/bin/Win64/dbghelp.dll $<TARGET_FILE_DIR:DSSHomework>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/thirdparty/vld/bin/Win64/Microsoft.DTfW.DHL.manifest $<TARGET_FILE_DIR:DSSHomework>
     )
 
 set_target_properties(DSSHomework PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/bin/)
